@@ -1,0 +1,294 @@
+.caregiver-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #f5fbf8;
+  color: #173b34;
+}
+
+.caregiver-header {
+  max-width: 1000px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.caregiver-back-button {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 14px 22px;
+  border: 2px solid #2f7d68;
+  border-radius: 12px;
+  background: white;
+  color: #205d4d;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.caregiver-header h1 {
+  margin: 0 0 10px;
+  font-size: 2.2rem;
+}
+
+.caregiver-header p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.caregiver-summary {
+  width: min(1000px, 100%);
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.caregiver-stat {
+  padding: 22px;
+  border-radius: 16px;
+  background: white;
+  border: 2px solid #c8e6dc;
+  text-align: center;
+}
+
+.caregiver-stat strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.9rem;
+}
+
+.caregiver-stat span {
+  font-size: 0.95rem;
+}
+
+.caregiver-game-summary,
+.caregiver-recent {
+  width: min(1000px, 100%);
+  margin: 0 auto 30px;
+  padding: 24px;
+  border-radius: 18px;
+  background: white;
+  border: 2px solid #c8e6dc;
+}
+
+.caregiver-game-summary h2,
+.caregiver-recent h2 {
+  margin: 0 0 20px;
+  font-size: 1.6rem;
+}
+
+.caregiver-game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.caregiver-game-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: #f5fbf8;
+  border: 1px solid #d5ebe3;
+  text-align: center;
+}
+
+.caregiver-game-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.caregiver-game-card strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.8rem;
+}
+
+.caregiver-game-card span {
+  color: #5c746d;
+  font-size: 0.9rem;
+}
+
+.caregiver-table-wrapper {
+  overflow-x: auto;
+}
+
+.caregiver-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.caregiver-table th,
+.caregiver-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #dceee7;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.caregiver-table th {
+  font-size: 0.9rem;
+}
+
+.caregiver-table td {
+  font-size: 0.95rem;
+}
+
+.caregiver-message {
+  width: min(600px, 100%);
+  margin: 50px auto;
+  padding: 24px;
+  border-radius: 16px;
+  background: white;
+  border: 2px solid #c8e6dc;
+  text-align: center;
+}
+
+.caregiver-message--error {
+  border-color: #d89b9b;
+}
+
+.caregiver-empty {
+  padding: 30px;
+  text-align: center;
+  color: #5c746d;
+}
+
+@media (max-width: 750px) {
+  .caregiver-page {
+    padding: 20px;
+  }
+
+  .caregiver-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .caregiver-game-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.caregiver-recommendation {
+  width: min(1000px, 100%);
+  margin: 0 auto 30px;
+  padding: 24px;
+  border-radius: 18px;
+  background: white;
+  border: 2px solid #c8e6dc;
+}
+
+.caregiver-section-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.caregiver-recommendation h2 {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+}
+
+.caregiver-recommendation p {
+  margin: 6px 0;
+}
+
+.caregiver-recommendation-reason {
+  color: #5c746d;
+  line-height: 1.5;
+}
+
+.caregiver-game-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #dceee7;
+  color: #5c746d;
+  font-size: 0.88rem;
+}
+
+.caregiver-reminders-section {
+  width: min(1000px, 100%);
+  margin: 0 auto 30px;
+  padding: 24px;
+  border-radius: 18px;
+  background: white;
+  border: 2px solid #c8e6dc;
+}
+
+.caregiver-section-heading {
+  margin-bottom: 20px;
+}
+
+.caregiver-section-heading h2 {
+  margin: 4px 0 6px;
+  font-size: 1.6rem;
+}
+
+.caregiver-section-heading p {
+  margin: 0;
+  color: #5c746d;
+}
+
+.caregiver-reminder-list {
+  display: grid;
+  gap: 12px;
+}
+
+.caregiver-reminder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f5fbf8;
+  border: 1px solid #d5ebe3;
+}
+
+.caregiver-reminder-item h3 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.caregiver-reminder-item p {
+  margin: 0;
+  color: #5c746d;
+  line-height: 1.45;
+}
+
+.caregiver-reminder-meta {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.caregiver-reminder-meta span {
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: #e7f7ef;
+  color: #205d4d;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.caregiver-reminder-meta time {
+  color: #5c746d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 650px) {
+  .caregiver-reminder-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .caregiver-reminder-meta {
+    align-items: flex-start;
+    text-align: left;
+  }
+}

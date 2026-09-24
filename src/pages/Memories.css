@@ -1,0 +1,249 @@
+.memories-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #f5fbf8;
+  color: #173b34;
+}
+
+.memories-header {
+  max-width: 1000px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.memories-back-button {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 14px 22px;
+  border: 2px solid #2f7d68;
+  border-radius: 12px;
+  background: white;
+  color: #205d4d;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.memories-header h1 {
+  margin: 0 0 10px;
+  font-size: 2.2rem;
+}
+
+.memories-header p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.memories-content {
+  width: min(1000px, 100%);
+  margin: 0 auto;
+}
+
+.memories-message {
+  width: min(800px, calc(100% - 40px));
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.memories-message--error {
+  border: 1px solid #d89b9b;
+  background: #fff4f4;
+  color: #8f3f3f;
+}
+
+.memories-message--success {
+  border: 1px solid #a9d8c6;
+  background: #effaf4;
+}
+
+.memory-form-card,
+.memory-list-section {
+  margin-bottom: 28px;
+  padding: 24px;
+  border: 2px solid #c8e6dc;
+  border-radius: 18px;
+  background: white;
+}
+
+.memory-form-card h2,
+.memory-list-section h2 {
+  margin: 0 0 18px;
+  font-size: 1.6rem;
+}
+
+.memory-form {
+  display: grid;
+  gap: 18px;
+}
+
+.memory-form label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.memory-form input,
+.memory-form textarea,
+.memory-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 2px solid #c8e6dc;
+  border-radius: 10px;
+  background: white;
+  color: #173b34;
+  font: inherit;
+}
+
+.memory-form textarea {
+  resize: vertical;
+}
+
+.memory-form input:focus,
+.memory-form textarea:focus,
+.memory-form select:focus {
+  outline: 3px solid #dff4eb;
+  border-color: #2f7d68;
+}
+
+.memory-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.memory-primary-button,
+.memory-secondary-button,
+.memory-delete-button {
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.memory-primary-button {
+  border: 2px solid #2f7d68;
+  background: #2f7d68;
+  color: white;
+}
+
+.memory-primary-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.memory-secondary-button {
+  border: 2px solid #7eaa9d;
+  background: white;
+  color: #205d4d;
+}
+
+.memory-delete-button {
+  border: 2px solid #c56b6b;
+  background: white;
+  color: #963f3f;
+}
+
+.memory-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.memory-list-header h2 {
+  margin-bottom: 6px;
+}
+
+.memory-list-header p {
+  margin: 0;
+  color: #5c746d;
+}
+
+.memory-count {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #e7f7ef;
+  font-weight: 700;
+}
+
+.memory-list {
+  display: grid;
+  gap: 14px;
+}
+
+.memory-card {
+  padding: 20px;
+  border: 1px solid #d5ebe3;
+  border-radius: 16px;
+  background: #f8fcfa;
+}
+
+.memory-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.memory-card-header h3 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.memory-card-header time {
+  color: #5c746d;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.memory-category {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: #e7f7ef;
+  color: #205d4d;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.memory-card p {
+  margin: 16px 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.memory-card-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.memory-empty {
+  padding: 30px;
+  text-align: center;
+  color: #5c746d;
+}
+
+@media (max-width: 650px) {
+  .memories-page {
+    padding: 20px;
+  }
+
+  .memories-list-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .memory-card-header {
+    flex-direction: column;
+  }
+
+  .memory-card-header time {
+    white-space: normal;
+  }
+}

@@ -1,0 +1,157 @@
+.performance-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #f5fbf8;
+  color: #173b34;
+}
+
+.performance-header {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  text-align: center;
+}
+
+.performance-back-button {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 14px 22px;
+  border: 2px solid #2f7d68;
+  border-radius: 12px;
+  background: white;
+  color: #205d4d;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.performance-header h1 {
+  margin: 0 0 10px;
+  font-size: 2.2rem;
+}
+
+.performance-header p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.performance-summary {
+  width: min(1000px, 100%);
+  margin: 0 auto 30px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.performance-stat {
+  padding: 20px;
+  border-radius: 16px;
+  background: white;
+  border: 2px solid #c8e6dc;
+  text-align: center;
+}
+
+.performance-stat strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.9rem;
+}
+
+.performance-stat span {
+  font-size: 0.95rem;
+}
+
+.performance-history {
+  width: min(1000px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 18px;
+  background: white;
+  border: 2px solid #c8e6dc;
+}
+
+.performance-history-header {
+  margin-bottom: 20px;
+}
+
+.performance-history-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+
+.performance-history-header p {
+  margin: 0;
+  color: #5c746d;
+}
+
+.performance-list {
+  display: grid;
+  gap: 12px;
+}
+
+.performance-item {
+  padding: 18px;
+  border-radius: 14px;
+  background: #f5fbf8;
+  border: 1px solid #d5ebe3;
+}
+
+.performance-item-main h3 {
+  margin: 0 0 5px;
+  font-size: 1.2rem;
+}
+
+.performance-item-main p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5c746d;
+}
+
+.performance-item-data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.performance-message {
+  width: min(600px, 100%);
+  margin: 50px auto;
+  padding: 24px;
+  border-radius: 16px;
+  background: white;
+  border: 2px solid #c8e6dc;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.performance-message--error {
+  border-color: #d89b9b;
+}
+
+.performance-empty {
+  padding: 30px;
+  text-align: center;
+  color: #5c746d;
+}
+
+@media (max-width: 750px) {
+  .performance-page {
+    padding: 20px;
+  }
+
+  .performance-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .performance-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .performance-item-data {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

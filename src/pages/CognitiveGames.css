@@ -1,0 +1,162 @@
+/* ============================================
+   Cognicare NER — Cognitive Games Page Styles
+   ============================================ */
+
+/* --- Page Layout --- */
+.games-page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* --- Back Button --- */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin-top: 24px;
+  font-size: var(--font-size-btn);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--accent);
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.back-button:hover {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+/* --- Page Header --- */
+.games-header {
+  text-align: center;
+  padding: 24px 0 8px;
+}
+
+.games-header-icon {
+  font-size: 56px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.games-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 8px;
+}
+
+.games-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+/* --- Games Grid --- */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 32px 0;
+  flex-grow: 1;
+}
+
+/* --- Game Card --- */
+.game-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.game-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.game-card-icon {
+  font-size: 56px;
+  line-height: 1;
+}
+
+.game-card-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.game-card-description {
+  font-size: var(--font-size-base);
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+/* --- Coming Soon Button (disabled look) --- */
+.game-card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 14px 32px;
+  font-size: var(--font-size-btn);
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border: 2px solid transparent;
+  border-radius: var(--btn-radius);
+  min-width: 180px;
+  text-decoration: none;
+}
+
+.game-card-button--disabled {
+  color: var(--text-light);
+  background: var(--border);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* --- Responsive: Stack on tablet & mobile --- */
+@media (max-width: 900px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 24px 0;
+  }
+
+  .game-card {
+    padding: 28px 16px;
+  }
+
+  .game-card-button {
+    width: 100%;
+  }
+
+  .back-button {
+    margin-top: 16px;
+  }
+
+  .games-header-icon {
+    font-size: 48px;
+  }
+}
+

@@ -1,0 +1,128 @@
+/* ============================================
+   Cognicare NER — Global Styles
+   Calm Blue + Green palette for elderly users
+   ============================================ */
+
+:root {
+  /* --- Colors: Light Mode --- */
+  --bg: #F0F7F7;
+  --bg-card: #FFFFFF;
+  --text: #2D3748;
+  --text-light: #5A6A7A;
+  --text-heading: #1A202C;
+  --accent: #2B6CB0;
+  --accent-hover: #2C5282;
+  --accent-green: #276749;
+  --accent-green-hover: #22543D;
+  --border: #CBD5E0;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --danger: #C53030;
+  --danger-hover: #9B2C2C;
+  --danger-bg: #FFF5F5;
+  --card-radius: 16px;
+  --btn-radius: 12px;
+
+  /* --- Typography --- */
+  --font-sans: system-ui, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+  --font-size-base: 20px;
+  --font-size-sm: 16px;
+  --font-size-lg: 24px;
+  --font-size-xl: 32px;
+  --font-size-btn: 18px;
+  --line-height: 1.5;
+
+  /* --- Apply --- */
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Colors: Dark Mode --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1A202C;
+    --bg-card: #2D3748;
+    --text: #E2E8F0;
+    --text-light: #A0AEC0;
+    --text-heading: #F7FAFC;
+    --accent: #63B3ED;
+    --accent-hover: #90CDF4;
+    --accent-green: #68D391;
+    --accent-green-hover: #9AE6B4;
+    --border: #4A5568;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --danger: #FC8181;
+    --danger-hover: #FEB2B2;
+    --danger-bg: #2D2028;
+  }
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--font-size-xl);
+}
+
+h2 {
+  font-size: var(--font-size-lg);
+}
+
+p {
+  margin: 0;
+}
+
+/* --- Accessible Focus --- */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  :root {
+    --font-size-base: 18px;
+    --font-size-xl: 26px;
+    --font-size-lg: 20px;
+  }
+
+  #root {
+    padding: 0 16px;
+  }
+}
