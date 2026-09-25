@@ -1,0 +1,573 @@
+/* ============================================================
+   Caregiver Links Page
+   ============================================================ */
+
+.caregiver-links-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: #f5f8f6;
+  color: #1f2d27;
+}
+
+
+/* ============================================================
+   Header
+   ============================================================ */
+
+.caregiver-links-header {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+}
+
+.caregiver-links-back-button {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1.5rem;
+  color: #376b57;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.caregiver-links-back-button:hover {
+  text-decoration: underline;
+}
+
+.caregiver-links-title-area {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.caregiver-links-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 18px;
+  background: #e4f2e9;
+  font-size: 2rem;
+}
+
+.caregiver-links-eyebrow {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #527363;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.caregiver-links-title-area h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.caregiver-links-title-area p {
+  max-width: 700px;
+  margin: 0.6rem 0 0;
+  color: #64756d;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   Messages
+   ============================================================ */
+
+.caregiver-links-message {
+  max-width: 1100px;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.caregiver-links-message--error {
+  background: #fff0f0;
+  border: 1px solid #f2c7c7;
+  color: #a33d3d;
+}
+
+.caregiver-links-message--success {
+  background: #edf8f1;
+  border: 1px solid #c8e6d2;
+  color: #2f7047;
+}
+
+
+/* ============================================================
+   Cards
+   ============================================================ */
+
+.caregiver-links-card {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e3ebe6;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(49, 76, 62, 0.07);
+}
+
+.caregiver-links-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.caregiver-links-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #f0f6f2;
+  font-size: 1.4rem;
+}
+
+.caregiver-links-section-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #5e796c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.caregiver-links-card h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.35;
+}
+
+.caregiver-links-card-heading p {
+  max-width: 720px;
+  margin: 0.5rem 0 0;
+  color: #6b7b74;
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   Form
+   ============================================================ */
+
+.caregiver-links-form {
+  margin-top: 1.5rem;
+}
+
+.caregiver-links-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #34473e;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.caregiver-links-form-row {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.caregiver-links-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cad8d0;
+  border-radius: 12px;
+  background: #fbfdfc;
+  color: #1f2d27;
+  font-size: 1rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.caregiver-links-input:focus {
+  border-color: #5b8c70;
+  box-shadow: 0 0 0 3px rgba(91, 140, 112, 0.14);
+}
+
+.caregiver-links-input::placeholder {
+  color: #9aa8a1;
+}
+
+.caregiver-links-input:disabled {
+  opacity: 0.7;
+}
+
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.caregiver-links-primary-button,
+.caregiver-links-refresh-button,
+.caregiver-links-approve-button,
+.caregiver-links-reject-button,
+.caregiver-links-remove-button {
+  border: none;
+  border-radius: 11px;
+  padding: 0.75rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    background 0.15s ease;
+}
+
+.caregiver-links-primary-button:hover,
+.caregiver-links-refresh-button:hover,
+.caregiver-links-approve-button:hover,
+.caregiver-links-reject-button:hover,
+.caregiver-links-remove-button:hover {
+  transform: translateY(-1px);
+}
+
+.caregiver-links-primary-button:disabled,
+.caregiver-links-refresh-button:disabled,
+.caregiver-links-approve-button:disabled,
+.caregiver-links-reject-button:disabled,
+.caregiver-links-remove-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.caregiver-links-primary-button {
+  background: #3f7858;
+  color: #ffffff;
+}
+
+.caregiver-links-primary-button:hover {
+  background: #356849;
+}
+
+.caregiver-links-refresh-button {
+  background: #edf4ef;
+  color: #3f6d53;
+}
+
+.caregiver-links-refresh-button:hover {
+  background: #e3eee7;
+}
+
+.caregiver-links-approve-button {
+  background: #3f7858;
+  color: #ffffff;
+}
+
+.caregiver-links-approve-button:hover {
+  background: #356849;
+}
+
+.caregiver-links-reject-button {
+  background: #fff0f0;
+  color: #a24a4a;
+}
+
+.caregiver-links-reject-button:hover {
+  background: #ffe5e5;
+}
+
+.caregiver-links-remove-button {
+  background: #f1f3f2;
+  color: #596761;
+}
+
+.caregiver-links-remove-button:hover {
+  background: #e7ebea;
+}
+
+
+/* ============================================================
+   List Heading
+   ============================================================ */
+
+.caregiver-links-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+
+/* ============================================================
+   Empty State
+   ============================================================ */
+
+.caregiver-links-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  border: 1px dashed #d2dfd7;
+  border-radius: 16px;
+  background: #fbfdfb;
+}
+
+.caregiver-links-empty-icon {
+  margin-bottom: 0.75rem;
+  font-size: 2rem;
+}
+
+.caregiver-links-empty h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.caregiver-links-empty p {
+  max-width: 580px;
+  margin: 0.5rem auto 0;
+  color: #708078;
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   Connection List
+   ============================================================ */
+
+.caregiver-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.caregiver-links-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e4ebe7;
+  border-radius: 15px;
+  background: #fcfefd;
+}
+
+.caregiver-links-item-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 0.9rem;
+}
+
+.caregiver-links-item-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #eef5f0;
+  font-size: 1.2rem;
+}
+
+.caregiver-links-item-title {
+  display: block;
+  color: #293a32;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.caregiver-links-item-main p {
+  margin: 0.3rem 0 0;
+  color: #718078;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.caregiver-links-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+/* ============================================================
+   Status
+   ============================================================ */
+
+.caregiver-links-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.caregiver-links-status--pending {
+  background: #fff6df;
+  color: #996f16;
+}
+
+.caregiver-links-status--approved {
+  background: #e9f7ed;
+  color: #307448;
+}
+
+.caregiver-links-status--rejected {
+  background: #fff0f0;
+  color: #a14d4d;
+}
+
+
+/* ============================================================
+   Information Box
+   ============================================================ */
+
+.caregiver-links-info {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid #dce8e1;
+  border-radius: 16px;
+  background: #f0f7f2;
+}
+
+.caregiver-links-info-icon {
+  flex-shrink: 0;
+  font-size: 1.4rem;
+}
+
+.caregiver-links-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.caregiver-links-info p {
+  margin: 0.35rem 0 0;
+  color: #66766e;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   Mobile / Tablet
+   ============================================================ */
+
+@media (max-width: 720px) {
+  .caregiver-links-page {
+    padding: 1.1rem;
+  }
+
+  .caregiver-links-title-area {
+    gap: 0.75rem;
+  }
+
+  .caregiver-links-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    font-size: 1.65rem;
+  }
+
+  .caregiver-links-title-area h1 {
+    font-size: 1.55rem;
+  }
+
+  .caregiver-links-card {
+    padding: 1.1rem;
+    border-radius: 16px;
+  }
+
+  .caregiver-links-form-row {
+    flex-direction: column;
+  }
+
+  .caregiver-links-primary-button {
+    width: 100%;
+  }
+
+  .caregiver-links-list-heading {
+    align-items: flex-start;
+  }
+
+  .caregiver-links-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .caregiver-links-item-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+
+/* ============================================================
+   Small Mobile
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .caregiver-links-page {
+    padding: 0.8rem;
+  }
+
+  .caregiver-links-title-area {
+    align-items: flex-start;
+  }
+
+  .caregiver-links-title-area h1 {
+    font-size: 1.35rem;
+  }
+
+  .caregiver-links-title-area p {
+    font-size: 0.9rem;
+  }
+
+  .caregiver-links-card-heading {
+    gap: 0.75rem;
+  }
+
+  .caregiver-links-card-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 1.2rem;
+  }
+
+  .caregiver-links-item-main {
+    align-items: flex-start;
+  }
+
+  .caregiver-links-item-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  .caregiver-links-item-actions {
+    gap: 0.4rem;
+  }
+
+  .caregiver-links-primary-button,
+  .caregiver-links-refresh-button,
+  .caregiver-links-approve-button,
+  .caregiver-links-reject-button,
+  .caregiver-links-remove-button {
+    font-size: 0.85rem;
+    padding: 0.65rem 0.8rem;
+  }
+}

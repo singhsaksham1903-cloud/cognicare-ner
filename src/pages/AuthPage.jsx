@@ -1,11 +1,19 @@
 import { useState } from 'react'
+
 import {
   loginUser,
   registerUser,
 } from '../utils/auth'
+
+import LanguageSelector from '../Components/LanguageSelector'
+import translations from '../data/translations'
+
 import './AuthPage.css'
 
-function AuthPage({ onAuthenticated }) {
+
+function AuthPage({
+  onAuthenticated,
+}) {
   const [mode, setMode] = useState('login')
 
   const [fullName, setFullName] = useState('')
@@ -16,6 +24,33 @@ function AuthPage({ onAuthenticated }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
+
+
+  const [language, setLanguage] =
+    useState(() => {
+      return (
+        localStorage.getItem(
+          'cognicare-language',
+        ) || 'en'
+      )
+    })
+
+
+  const text =
+    translations[language]?.authPage ||
+    translations.en.authPage
+
+
+  const handleLanguageChange = (
+    newLanguage,
+  ) => {
+    setLanguage(newLanguage)
+
+    localStorage.setItem(
+      'cognicare-language',
+      newLanguage,
+    )
+  }
 
 
   const handleSubmit = async (event) => {
@@ -35,7 +70,7 @@ function AuthPage({ onAuthenticated }) {
         )
 
         setMessage(
-          'Account created successfully. You can now log in.',
+          text.accountCreated,
         )
 
         setMode('login')
@@ -51,7 +86,7 @@ function AuthPage({ onAuthenticated }) {
     } catch (err) {
       setError(
         err.message ||
-          'Something went wrong. Please try again.',
+          text.genericError,
       )
     } finally {
       setLoading(false)
@@ -73,15 +108,38 @@ function AuthPage({ onAuthenticated }) {
 
   return (
     <div className="auth-page">
+
       <section className="auth-card">
+
         <div className="auth-header">
-          <h1>Cognicare NER</h1>
+
+          <h1>
+            Cognicare NER
+          </h1>
 
           <p>
             {mode === 'login'
-              ? 'Sign in to continue'
-              : 'Create your Cognicare account'}
+              ? text.signInSubtitle
+              : text.createAccountSubtitle}
           </p>
+
+        </div>
+
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '20px',
+          }}
+        >
+          <LanguageSelector
+            language={language}
+            onChange={
+              handleLanguageChange
+            }
+            label={text.language}
+          />
         </div>
 
 
@@ -106,7 +164,7 @@ function AuthPage({ onAuthenticated }) {
 
           {mode === 'register' && (
             <label>
-              Full Name
+              {text.fullName}
 
               <input
                 type="text"
@@ -116,7 +174,9 @@ function AuthPage({ onAuthenticated }) {
                     event.target.value,
                   )
                 }
-                placeholder="Enter your full name"
+                placeholder={
+                  text.fullNamePlaceholder
+                }
                 required
                 maxLength={200}
               />
@@ -125,7 +185,7 @@ function AuthPage({ onAuthenticated }) {
 
 
           <label>
-            Email
+            {text.email}
 
             <input
               type="email"
@@ -135,14 +195,16 @@ function AuthPage({ onAuthenticated }) {
                   event.target.value,
                 )
               }
-              placeholder="Enter your email"
+              placeholder={
+                text.emailPlaceholder
+              }
               required
             />
           </label>
 
 
           <label>
-            Password
+            {text.password}
 
             <input
               type="password"
@@ -152,7 +214,9 @@ function AuthPage({ onAuthenticated }) {
                   event.target.value,
                 )
               }
-              placeholder="Enter your password"
+              placeholder={
+                text.passwordPlaceholder
+              }
               required
               minLength={8}
               maxLength={128}
@@ -162,7 +226,7 @@ function AuthPage({ onAuthenticated }) {
 
           {mode === 'register' && (
             <label>
-              Account Type
+              {text.accountType}
 
               <select
                 value={role}
@@ -173,11 +237,11 @@ function AuthPage({ onAuthenticated }) {
                 }
               >
                 <option value="elderly">
-                  Elderly User
+                  {text.elderlyUser}
                 </option>
 
                 <option value="caregiver">
-                  Caregiver
+                  {text.caregiver}
                 </option>
               </select>
             </label>
@@ -190,11 +254,12 @@ function AuthPage({ onAuthenticated }) {
             disabled={loading}
           >
             {loading
-              ? 'Please wait...'
+              ? text.pleaseWait
               : mode === 'login'
-                ? 'Sign In'
-                : 'Create Account'}
+                ? text.signIn
+                : text.createAccount}
           </button>
+
         </form>
 
 
@@ -204,12 +269,15 @@ function AuthPage({ onAuthenticated }) {
           onClick={switchMode}
         >
           {mode === 'login'
-            ? "Don't have an account? Create one"
-            : 'Already have an account? Sign in'}
+            ? text.createAccountPrompt
+            : text.signInPrompt}
         </button>
+
       </section>
+
     </div>
   )
 }
+
 
 export default AuthPage

@@ -1,8 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
+
 import './SequenceMemory.css'
+
 import { savePerformanceResult } from '../utils/performanceStorage'
 
-const SYMBOLS = ['🍎', '🧠', '🌸', '⭐', '🍀']
+
+const SYMBOLS = [
+  '🍎',
+  '🧠',
+  '🌸',
+  '⭐',
+  '🍀',
+]
+
 
 const LEVELS = {
   Easy: 3,
@@ -10,148 +20,289 @@ const LEVELS = {
   Hard: 5,
 }
 
-const HISTORY_KEY = 'cognicare-sequence-memory-history'
+
+const HISTORY_KEY =
+  'cognicare-sequence-memory-history'
+
 
 function shuffleItems(items) {
-  return [...items].sort(() => Math.random() - 0.5)
+  return [...items].sort(
+    () => Math.random() - 0.5,
+  )
 }
 
+
 function getValidDifficulty(value) {
-  return LEVELS[value] ? value : 'Easy'
+  return LEVELS[value]
+    ? value
+    : 'Easy'
 }
+
 
 function SequenceMemory({
   onBack,
   initialDifficulty = 'Easy',
+  text,
 }) {
-  const [difficulty, setDifficulty] = useState(
-    getValidDifficulty(initialDifficulty),
-  )
+  const [difficulty, setDifficulty] =
+    useState(
+      getValidDifficulty(
+        initialDifficulty,
+      ),
+    )
 
-  const [sequence, setSequence] = useState([])
-  const [options, setOptions] = useState([])
-  const [userSequence, setUserSequence] = useState([])
+  const [sequence, setSequence] =
+    useState([])
 
-  const [phase, setPhase] = useState('idle')
+  const [options, setOptions] =
+    useState([])
 
-  const [message, setMessage] = useState(
-    'Choose a difficulty to begin.',
-  )
+  const [userSequence, setUserSequence] =
+    useState([])
 
-  const [mistakes, setMistakes] = useState(0)
-  const [timeElapsed, setTimeElapsed] = useState(0)
-  const [timerStarted, setTimerStarted] = useState(false)
+  const [phase, setPhase] =
+    useState('idle')
 
-  const [history, setHistory] = useState([])
 
-  const hasSavedResult = useRef(false)
+  const [message, setMessage] =
+    useState(
+      text.chooseDifficulty,
+    )
 
-  // Always guarantee a valid sequence length.
-  const sequenceLength = LEVELS[difficulty] || LEVELS.Easy
 
+  const [mistakes, setMistakes] =
+    useState(0)
+
+  const [timeElapsed, setTimeElapsed] =
+    useState(0)
+
+  const [timerStarted, setTimerStarted] =
+    useState(false)
+
+  const [history, setHistory] =
+    useState([])
+
+
+  const hasSavedResult =
+    useRef(false)
+
+
+  // ==========================================
+  // Always guarantee a valid sequence length
+  // ==========================================
+
+  const sequenceLength =
+    LEVELS[difficulty] ||
+    LEVELS.Easy
+
+
+  // ==========================================
   // Load previous sessions
+  // ==========================================
+
   useEffect(() => {
-    const savedHistory = localStorage.getItem(HISTORY_KEY)
+    const savedHistory =
+      localStorage.getItem(
+        HISTORY_KEY,
+      )
 
     if (!savedHistory) {
       return
     }
 
     try {
-      const parsedHistory = JSON.parse(savedHistory)
+      const parsedHistory =
+        JSON.parse(savedHistory)
 
-      if (Array.isArray(parsedHistory)) {
-        setHistory(parsedHistory)
+      if (
+        Array.isArray(
+          parsedHistory,
+        )
+      ) {
+        setHistory(
+          parsedHistory,
+        )
       }
     } catch {
-      localStorage.removeItem(HISTORY_KEY)
+      localStorage.removeItem(
+        HISTORY_KEY,
+      )
     }
   }, [])
 
+
+  // ==========================================
   // Timer
+  // ==========================================
+
   useEffect(() => {
-    if (!timerStarted || phase !== 'answering') {
+    if (
+      !timerStarted ||
+      phase !== 'answering'
+    ) {
       return undefined
     }
 
-    const timer = setInterval(() => {
-      setTimeElapsed((currentTime) => currentTime + 1)
-    }, 1000)
+    const timer = setInterval(
+      () => {
+        setTimeElapsed(
+          (currentTime) =>
+            currentTime + 1,
+        )
+      },
+      1000,
+    )
 
-    return () => clearInterval(timer)
-  }, [timerStarted, phase])
+    return () =>
+      clearInterval(timer)
+  }, [
+    timerStarted,
+    phase,
+  ])
 
-  const formatTime = (seconds) => {
-    const safeSeconds = Number.isFinite(Number(seconds))
-      ? Number(seconds)
-      : 0
 
-    const minutes = Math.floor(safeSeconds / 60)
-    const remainingSeconds = safeSeconds % 60
+  // ==========================================
+  // Format Time
+  // ==========================================
 
-    return `${String(minutes).padStart(2, '0')}:${String(
+  const formatTime = (
+    seconds,
+  ) => {
+    const safeSeconds =
+      Number.isFinite(
+        Number(seconds),
+      )
+        ? Number(seconds)
+        : 0
+
+    const minutes =
+      Math.floor(
+        safeSeconds / 60,
+      )
+
+    const remainingSeconds =
+      safeSeconds % 60
+
+    return `${String(
+      minutes,
+    ).padStart(2, '0')}:${String(
       remainingSeconds,
     ).padStart(2, '0')}`
   }
 
+
+  // ==========================================
+  // Start Game
+  // ==========================================
+
   const startGame = () => {
-    const newSequence = shuffleItems(SYMBOLS).slice(
-      0,
-      sequenceLength,
+    const newSequence =
+      shuffleItems(SYMBOLS).slice(
+        0,
+        sequenceLength,
+      )
+
+    const shuffledOptions =
+      shuffleItems(
+        newSequence,
+      )
+
+    setSequence(
+      newSequence,
     )
 
-    const shuffledOptions = shuffleItems(newSequence)
+    setOptions(
+      shuffledOptions,
+    )
 
-    setSequence(newSequence)
-    setOptions(shuffledOptions)
     setUserSequence([])
+
     setMistakes(0)
+
     setTimeElapsed(0)
+
     setTimerStarted(false)
+
     setPhase('showing')
-    setMessage('Remember this sequence...')
+
+    setMessage(
+      text.rememberSequence,
+    )
 
     hasSavedResult.current = false
 
+
     setTimeout(() => {
       setPhase('answering')
+
       setTimerStarted(true)
+
       setMessage(
-        'Now select the objects in the same order.',
+        text.selectSameOrder,
       )
     }, 2500)
   }
 
-  const handleOptionClick = (symbol) => {
-    if (phase !== 'answering') {
+
+  // ==========================================
+  // Handle Option Click
+  // ==========================================
+
+  const handleOptionClick = (
+    symbol,
+  ) => {
+    if (
+      phase !== 'answering'
+    ) {
       return
     }
 
-    const nextIndex = userSequence.length
-    const correctSymbol = sequence[nextIndex]
+    const nextIndex =
+      userSequence.length
 
-    if (symbol !== correctSymbol) {
-      setMistakes((currentMistakes) => currentMistakes + 1)
+    const correctSymbol =
+      sequence[nextIndex]
+
+    if (
+      symbol !== correctSymbol
+    ) {
+      setMistakes(
+        (currentMistakes) =>
+          currentMistakes + 1,
+      )
 
       setMessage(
-        'Not quite. Take your time and try the next one.',
+        text.notQuite,
       )
 
       return
     }
 
-    const updatedSequence = [...userSequence, symbol]
 
-    setUserSequence(updatedSequence)
+    const updatedSequence = [
+      ...userSequence,
+      symbol,
+    ]
 
-    if (updatedSequence.length === sequence.length) {
+    setUserSequence(
+      updatedSequence,
+    )
+
+
+    if (
+      updatedSequence.length ===
+      sequence.length
+    ) {
       setPhase('complete')
+
       setTimerStarted(false)
+
       setMessage(
-        '🎉 Excellent! You remembered the sequence.',
+        text.excellent,
       )
     }
   }
+
 
   /*
    * Accuracy:
@@ -163,36 +314,60 @@ function SequenceMemory({
    * 3 items, 1 mistake  = 75%
    * 3 items, 2 mistakes = 60%
    */
-  const totalAttempts = sequenceLength + mistakes
+
+  const totalAttempts =
+    sequenceLength +
+    mistakes
+
 
   const accuracy =
-    Number.isFinite(totalAttempts) && totalAttempts > 0
+    Number.isFinite(
+      totalAttempts,
+    ) &&
+    totalAttempts > 0
       ? Math.round(
-          (sequenceLength / totalAttempts) * 100,
+          (sequenceLength /
+            totalAttempts) *
+            100,
         )
       : 0
 
-  const safeAccuracy = Number.isFinite(accuracy)
-    ? accuracy
-    : 0
 
-  const gameCompleted = phase === 'complete'
+  const safeAccuracy =
+    Number.isFinite(
+      accuracy,
+    )
+      ? accuracy
+      : 0
 
+
+  const gameCompleted =
+    phase === 'complete'
+
+
+  // ==========================================
   // Save completed game
+  // ==========================================
+
   useEffect(() => {
-    if (!gameCompleted || hasSavedResult.current) {
+    if (
+      !gameCompleted ||
+      hasSavedResult.current
+    ) {
       return
     }
 
     const result = {
       id: Date.now(),
-      date: new Date().toLocaleString(),
+      date:
+        new Date().toLocaleString(),
       difficulty,
       sequenceLength,
       mistakes,
       time: timeElapsed,
       accuracy: safeAccuracy,
     }
+
 
     savePerformanceResult({
       game: 'Sequence Memory',
@@ -204,14 +379,25 @@ function SequenceMemory({
       completed: true,
     })
 
-    const updatedHistory = [result, ...history].slice(0, 10)
 
-    setHistory(updatedHistory)
+    const updatedHistory = [
+      result,
+      ...history,
+    ].slice(0, 10)
+
+
+    setHistory(
+      updatedHistory,
+    )
+
 
     localStorage.setItem(
       HISTORY_KEY,
-      JSON.stringify(updatedHistory),
+      JSON.stringify(
+        updatedHistory,
+      ),
     )
+
 
     hasSavedResult.current = true
   }, [
@@ -224,54 +410,96 @@ function SequenceMemory({
     history,
   ])
 
+
+  // ==========================================
+  // Clear History
+  // ==========================================
+
   const handleClearHistory = () => {
     setHistory([])
-    localStorage.removeItem(HISTORY_KEY)
+
+    localStorage.removeItem(
+      HISTORY_KEY,
+    )
   }
+
 
   return (
     <div className="sequence-memory-page">
+
+      {/* ======================================
+          Header
+          ====================================== */}
+
       <header className="sequence-header">
+
         <button
           type="button"
           className="sequence-back-button"
           onClick={onBack}
         >
-          ← Back to Games
+          ← {text.backToGames}
         </button>
 
-        <h1>🔢 Sequence Memory</h1>
+
+        <h1>
+          🔢 {text.title}
+        </h1>
+
 
         <p>
-          Remember the order of the objects and select them
-          in the same order.
+          {text.description}
         </p>
+
       </header>
 
-      {/* Difficulty */}
+
+      {/* ======================================
+          Difficulty
+          ====================================== */}
+
       <section className="sequence-controls">
-        <h2>Select Difficulty</h2>
+
+        <h2>
+          {text.selectDifficulty}
+        </h2>
+
 
         <div className="difficulty-buttons">
-          {Object.keys(LEVELS).map((level) => (
-            <button
-              key={level}
-              type="button"
-              className={`difficulty-button ${
-                difficulty === level
-                  ? 'difficulty-button--active'
-                  : ''
-              }`}
-              onClick={() => setDifficulty(level)}
-              disabled={
-                phase === 'showing' ||
-                phase === 'answering'
-              }
-            >
-              {level}
-            </button>
-          ))}
+
+          {Object.keys(LEVELS).map(
+            (level) => (
+              <button
+                key={level}
+                type="button"
+                className={`difficulty-button ${
+                  difficulty === level
+                    ? 'difficulty-button--active'
+                    : ''
+                }`}
+                onClick={() =>
+                  setDifficulty(
+                    level,
+                  )
+                }
+                disabled={
+                  phase ===
+                    'showing' ||
+                  phase ===
+                    'answering'
+                }
+              >
+                {
+                  text.difficulties[
+                    level
+                  ]
+                }
+              </button>
+            ),
+          )}
+
         </div>
+
 
         <button
           type="button"
@@ -283,173 +511,326 @@ function SequenceMemory({
           }
         >
           {phase === 'complete'
-            ? 'Play Again'
-            : 'Start Game'}
+            ? text.playAgain
+            : text.startGame}
         </button>
+
       </section>
 
-      {/* Current statistics */}
+
+      {/* ======================================
+          Current Statistics
+          ====================================== */}
+
       <section className="sequence-stats">
-        <div className="sequence-stat">
-          <strong>{sequenceLength}</strong>
-          <span>Items</span>
-        </div>
 
         <div className="sequence-stat">
-          <strong>{mistakes}</strong>
-          <span>Mistakes</span>
+
+          <strong>
+            {sequenceLength}
+          </strong>
+
+          <span>
+            {text.items}
+          </span>
+
         </div>
 
-        <div className="sequence-stat">
-          <strong>{formatTime(timeElapsed)}</strong>
-          <span>Time</span>
-        </div>
 
         <div className="sequence-stat">
-          <strong>{safeAccuracy}%</strong>
-          <span>Accuracy</span>
+
+          <strong>
+            {mistakes}
+          </strong>
+
+          <span>
+            {text.mistakes}
+          </span>
+
         </div>
+
+
+        <div className="sequence-stat">
+
+          <strong>
+            {formatTime(
+              timeElapsed,
+            )}
+          </strong>
+
+          <span>
+            {text.time}
+          </span>
+
+        </div>
+
+
+        <div className="sequence-stat">
+
+          <strong>
+            {safeAccuracy}%
+          </strong>
+
+          <span>
+            {text.accuracy}
+          </span>
+
+        </div>
+
       </section>
 
-      <p className="sequence-message">{message}</p>
 
-      {/* Sequence to remember */}
+      {/* ======================================
+          Current Message
+          ====================================== */}
+
+      <p className="sequence-message">
+        {message}
+      </p>
+
+
+      {/* ======================================
+          Sequence to Remember
+          ====================================== */}
+
       {phase === 'showing' && (
         <section
           className="sequence-display"
-          aria-label="Sequence to remember"
+          aria-label={
+            text.sequenceToRemember
+          }
         >
-          {sequence.map((symbol, index) => (
-            <div
-              className="sequence-symbol sequence-symbol--large"
-              key={`${symbol}-${index}`}
-            >
-              {symbol}
-            </div>
-          ))}
+
+          {sequence.map(
+            (symbol, index) => (
+              <div
+                className="sequence-symbol sequence-symbol--large"
+                key={`${symbol}-${index}`}
+              >
+                {symbol}
+              </div>
+            ),
+          )}
+
         </section>
       )}
 
-      {/* Answer buttons */}
+
+      {/* ======================================
+          Answer Buttons
+          ====================================== */}
+
       {phase === 'answering' && (
         <section
           className="sequence-options"
-          aria-label="Sequence choices"
+          aria-label={
+            text.sequenceChoices
+          }
         >
-          {options.map((symbol) => {
-            const alreadySelected =
-              userSequence.includes(symbol)
 
-            return (
-              <button
-                key={symbol}
-                type="button"
-                className={`sequence-symbol ${
-                  alreadySelected
-                    ? 'sequence-symbol--selected'
-                    : ''
-                }`}
-                onClick={() =>
-                  handleOptionClick(symbol)
-                }
-                disabled={alreadySelected}
-              >
-                {symbol}
-              </button>
-            )
-          })}
+          {options.map(
+            (symbol) => {
+
+              const alreadySelected =
+                userSequence.includes(
+                  symbol,
+                )
+
+              return (
+                <button
+                  key={symbol}
+                  type="button"
+                  className={`sequence-symbol ${
+                    alreadySelected
+                      ? 'sequence-symbol--selected'
+                      : ''
+                  }`}
+                  onClick={() =>
+                    handleOptionClick(
+                      symbol,
+                    )
+                  }
+                  disabled={
+                    alreadySelected
+                  }
+                >
+                  {symbol}
+                </button>
+              )
+            },
+          )}
+
         </section>
       )}
 
-      {/* Completion */}
+
+      {/* ======================================
+          Completion
+          ====================================== */}
+
       {gameCompleted && (
         <section className="sequence-complete">
-          <h2>🎉 Well Done!</h2>
+
+          <h2>
+            🎉 {text.wellDone}
+          </h2>
+
 
           <p>
-            You remembered the complete sequence.
+            {text.completeDescription}
           </p>
 
-          <p>
-            <strong>Difficulty:</strong> {difficulty}
-          </p>
 
           <p>
-            <strong>Time:</strong>{' '}
-            {formatTime(timeElapsed)}
+            <strong>
+              {text.difficulty}:
+            </strong>{' '}
+            {
+              text.difficulties[
+                difficulty
+              ]
+            }
           </p>
 
-          <p>
-            <strong>Mistakes:</strong> {mistakes}
-          </p>
 
           <p>
-            <strong>Accuracy:</strong> {safeAccuracy}%
+            <strong>
+              {text.time}:
+            </strong>{' '}
+            {formatTime(
+              timeElapsed,
+            )}
           </p>
+
+
+          <p>
+            <strong>
+              {text.mistakes}:
+            </strong>{' '}
+            {mistakes}
+          </p>
+
+
+          <p>
+            <strong>
+              {text.accuracy}:
+            </strong>{' '}
+            {safeAccuracy}%
+          </p>
+
         </section>
       )}
 
-      {/* History */}
+
+      {/* ======================================
+          History
+          ====================================== */}
+
       {history.length > 0 && (
         <section className="sequence-history">
+
           <div className="sequence-history-header">
+
             <div>
-              <h2>📊 Previous Sessions</h2>
+
+              <h2>
+                📊 {text.previousSessions}
+              </h2>
+
 
               <p>
-                Your recent Sequence Memory results.
+                {text.recentResults}
               </p>
+
             </div>
+
 
             <button
               type="button"
               className="sequence-clear-button"
-              onClick={handleClearHistory}
+              onClick={
+                handleClearHistory
+              }
             >
-              Clear History
+              {text.clearHistory}
             </button>
+
           </div>
+
 
           <div className="sequence-history-list">
-            {history.map((result) => (
-              <article
-                className="sequence-history-item"
-                key={result.id}
-              >
-                <strong>{result.date}</strong>
 
-                <div>
-                  <span>
-                    Difficulty: {result.difficulty}
-                  </span>
+            {history.map(
+              (result) => (
+                <article
+                  className="sequence-history-item"
+                  key={result.id}
+                >
 
-                  <span>
-                    Items: {result.sequenceLength}
-                  </span>
+                  <strong>
+                    {result.date}
+                  </strong>
 
-                  <span>
-                    Accuracy: {result.accuracy}%
-                  </span>
 
-                  <span>
-                    Mistakes: {result.mistakes}
-                  </span>
+                  <div>
 
-                  <span>
-                    Time: {formatTime(result.time)}
-                  </span>
-                </div>
-              </article>
-            ))}
+                    <span>
+                      {text.difficulty}:{' '}
+                      {
+                        text.difficulties[
+                          result.difficulty
+                        ] ||
+                        result.difficulty
+                      }
+                    </span>
+
+
+                    <span>
+                      {text.items}:{' '}
+                      {
+                        result.sequenceLength
+                      }
+                    </span>
+
+
+                    <span>
+                      {text.accuracy}:{' '}
+                      {result.accuracy}%
+                    </span>
+
+
+                    <span>
+                      {text.mistakes}:{' '}
+                      {result.mistakes}
+                    </span>
+
+
+                    <span>
+                      {text.time}:{' '}
+                      {formatTime(
+                        result.time,
+                      )}
+                    </span>
+
+                  </div>
+
+                </article>
+              ),
+            )}
+
           </div>
 
+
           <p className="sequence-local-note">
-            History is currently saved only on this device.
+            {text.localHistoryNote}
           </p>
+
         </section>
       )}
+
     </div>
   )
 }
+
 
 export default SequenceMemory

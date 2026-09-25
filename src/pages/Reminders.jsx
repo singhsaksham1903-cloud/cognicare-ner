@@ -19,7 +19,10 @@ const EMPTY_FORM = {
 }
 
 
-function Reminders({ onBack }) {
+function Reminders({
+  onBack,
+  text,
+}) {
   const [reminders, setReminders] = useState([])
   const [form, setForm] = useState(EMPTY_FORM)
 
@@ -48,7 +51,7 @@ function Reminders({ onBack }) {
 
       setError(
         err.message ||
-          'Could not load reminders from the server.',
+          text.loadError,
       )
     } finally {
       setLoading(false)
@@ -93,7 +96,7 @@ function Reminders({ onBack }) {
       !form.description.trim()
     ) {
       setError(
-        'Please enter both a title and description.',
+        text.validationError,
       )
       return
     }
@@ -107,7 +110,8 @@ function Reminders({ onBack }) {
 
       const payload = {
         title: form.title.trim(),
-        description: form.description.trim(),
+        description:
+          form.description.trim(),
         category: form.category,
         dueDatetime: form.dueDatetime
           ? new Date(
@@ -124,7 +128,7 @@ function Reminders({ onBack }) {
         )
 
         setMessage(
-          'Reminder updated successfully.',
+          text.updateSuccess,
         )
       } else {
         await apiPost(
@@ -133,7 +137,7 @@ function Reminders({ onBack }) {
         )
 
         setMessage(
-          'Reminder saved successfully.',
+          text.saveSuccess,
         )
       }
 
@@ -148,7 +152,7 @@ function Reminders({ onBack }) {
 
       setError(
         err.message ||
-          'Could not save the reminder.',
+          text.saveError,
       )
     } finally {
       setSaving(false)
@@ -228,8 +232,8 @@ function Reminders({ onBack }) {
 
       setMessage(
         reminder.completed
-          ? 'Reminder marked as active.'
-          : 'Reminder marked as completed.',
+          ? text.markActiveSuccess
+          : text.completeSuccess,
       )
 
       await loadReminders()
@@ -241,7 +245,7 @@ function Reminders({ onBack }) {
 
       setError(
         err.message ||
-          'Could not update the reminder.',
+          text.updateError,
       )
     }
   }
@@ -252,7 +256,7 @@ function Reminders({ onBack }) {
   ) => {
     const confirmed =
       window.confirm(
-        'Are you sure you want to delete this reminder?',
+        text.deleteConfirm,
       )
 
     if (!confirmed) {
@@ -272,7 +276,7 @@ function Reminders({ onBack }) {
       }
 
       setMessage(
-        'Reminder deleted successfully.',
+        text.deleteSuccess,
       )
 
       await loadReminders()
@@ -284,7 +288,7 @@ function Reminders({ onBack }) {
 
       setError(
         err.message ||
-          'Could not delete the reminder.',
+          text.deleteError,
       )
     }
   }
@@ -292,7 +296,7 @@ function Reminders({ onBack }) {
 
   const formatDateTime = (value) => {
     if (!value) {
-      return 'No due date'
+      return text.noDueDate
     }
 
     const date = new Date(value)
@@ -334,16 +338,17 @@ function Reminders({ onBack }) {
           className="reminders-back-button"
           onClick={onBack}
         >
-          ← Back to Dashboard
+          ← {text.backToDashboard}
         </button>
 
 
-        <h1>Reminders</h1>
+        <h1>
+          {text.remindersTitle}
+        </h1>
 
 
         <p>
-          Keep track of important activities,
-          appointments, and daily tasks.
+          {text.remindersDescription}
         </p>
 
       </header>
@@ -370,8 +375,8 @@ function Reminders({ onBack }) {
 
           <h2>
             {editingId !== null
-              ? 'Edit Reminder'
-              : 'Add a Reminder'}
+              ? text.editReminder
+              : text.addReminder}
           </h2>
 
 
@@ -381,21 +386,23 @@ function Reminders({ onBack }) {
           >
 
             <label>
-              Title
+              {text.title}
 
               <input
                 type="text"
                 name="title"
                 value={form.title}
                 onChange={handleChange}
-                placeholder="e.g. Family video call"
+                placeholder={
+                  text.titlePlaceholder
+                }
                 maxLength={200}
               />
             </label>
 
 
             <label>
-              Description
+              {text.description}
 
               <textarea
                 name="description"
@@ -403,7 +410,9 @@ function Reminders({ onBack }) {
                   form.description
                 }
                 onChange={handleChange}
-                placeholder="What should be remembered?"
+                placeholder={
+                  text.descriptionPlaceholder
+                }
                 rows={4}
                 maxLength={5000}
               />
@@ -411,7 +420,7 @@ function Reminders({ onBack }) {
 
 
             <label>
-              Category
+              {text.category}
 
               <select
                 name="category"
@@ -419,38 +428,38 @@ function Reminders({ onBack }) {
                 onChange={handleChange}
               >
                 <option value="General">
-                  General
+                  {text.categories.General}
                 </option>
 
                 <option value="Family">
-                  Family
+                  {text.categories.Family}
                 </option>
 
                 <option value="Appointment">
-                  Appointment
+                  {text.categories.Appointment}
                 </option>
 
                 <option value="Medication">
-                  Medication
+                  {text.categories.Medication}
                 </option>
 
                 <option value="Activity">
-                  Activity
+                  {text.categories.Activity}
                 </option>
 
                 <option value="Personal">
-                  Personal
+                  {text.categories.Personal}
                 </option>
 
                 <option value="Other">
-                  Other
+                  {text.categories.Other}
                 </option>
               </select>
             </label>
 
 
             <label>
-              Due Date & Time
+              {text.dueDateTime}
 
               <input
                 type="datetime-local"
@@ -477,7 +486,7 @@ function Reminders({ onBack }) {
                   }
                 />
 
-                Mark as completed
+                {text.markCompleted}
 
               </label>
             )}
@@ -491,10 +500,10 @@ function Reminders({ onBack }) {
                 disabled={saving}
               >
                 {saving
-                  ? 'Saving...'
+                  ? text.saving
                   : editingId !== null
-                    ? 'Update Reminder'
-                    : 'Save Reminder'}
+                    ? text.updateReminder
+                    : text.saveReminder}
               </button>
 
 
@@ -504,7 +513,7 @@ function Reminders({ onBack }) {
                   className="reminder-secondary-button"
                   onClick={resetForm}
                 >
-                  Cancel Edit
+                  {text.cancelEdit}
                 </button>
               )}
 
@@ -523,12 +532,11 @@ function Reminders({ onBack }) {
             <div>
 
               <h2>
-                Saved Reminders
+                {text.savedReminders}
               </h2>
 
               <p>
-                Your reminders are stored
-                securely in your account.
+                {text.savedRemindersDescription}
               </p>
 
             </div>
@@ -538,8 +546,8 @@ function Reminders({ onBack }) {
               {reminders.length}{' '}
 
               {reminders.length === 1
-                ? 'reminder'
-                : 'reminders'}
+                ? text.reminder
+                : text.remindersPlural}
             </span>
 
           </div>
@@ -548,14 +556,13 @@ function Reminders({ onBack }) {
           {loading ? (
 
             <div className="reminder-empty">
-              Loading reminders...
+              {text.loadingReminders}
             </div>
 
           ) : reminders.length === 0 ? (
 
             <div className="reminder-empty">
-              No reminders have been
-              saved yet.
+              {text.noReminders}
             </div>
 
           ) : (
@@ -593,6 +600,9 @@ function Reminders({ onBack }) {
 
                           <span className="reminder-category">
                             {
+                              text.categories[
+                                reminder.category
+                              ] ||
                               reminder.category
                             }
                           </span>
@@ -600,14 +610,14 @@ function Reminders({ onBack }) {
 
                           {reminder.completed && (
                             <span className="reminder-status reminder-status--completed">
-                              Completed
+                              {text.completed}
                             </span>
                           )}
 
 
                           {overdue && (
                             <span className="reminder-status reminder-status--overdue">
-                              Overdue
+                              {text.overdue}
                             </span>
                           )}
 
@@ -642,8 +652,8 @@ function Reminders({ onBack }) {
                           }
                         >
                           {reminder.completed
-                            ? 'Mark Active'
-                            : 'Mark Complete'}
+                            ? text.markActive
+                            : text.markComplete}
                         </button>
 
 
@@ -656,7 +666,7 @@ function Reminders({ onBack }) {
                             )
                           }
                         >
-                          Edit
+                          {text.edit}
                         </button>
 
 
@@ -669,7 +679,7 @@ function Reminders({ onBack }) {
                             )
                           }
                         >
-                          Delete
+                          {text.delete}
                         </button>
 
                       </div>

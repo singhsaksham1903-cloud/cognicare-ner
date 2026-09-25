@@ -1,0 +1,47 @@
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.language-selector label {
+  color: #2f4f3a;
+}
+
+.language-selector select {
+  min-width: 125px;
+
+  padding: 9px 12px;
+
+  border: 1px solid #cbd8ce;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #2f4f3a;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  outline: none;
+}
+
+.language-selector select:focus {
+  border-color: #6f9d7a;
+  box-shadow: 0 0 0 3px rgba(111, 157, 122, 0.15);
+}
+
+@media (max-width: 600px) {
+  .language-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .language-selector select {
+    min-width: 120px;
+  }
+}

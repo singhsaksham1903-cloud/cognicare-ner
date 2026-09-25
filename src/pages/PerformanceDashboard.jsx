@@ -4,7 +4,10 @@ import './PerformanceDashboard.css'
 import { apiGet } from '../utils/api'
 
 
-function PerformanceDashboard({ onBack }) {
+function PerformanceDashboard({
+  onBack,
+  text,
+}) {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -118,18 +121,17 @@ function PerformanceDashboard({ onBack }) {
           className="performance-back-button"
           onClick={onBack}
         >
-          ← Back to Dashboard
+          ← {text.backToDashboard}
         </button>
 
 
         <h1>
-          📊 Performance Dashboard
+          📊 {text.performanceDashboard}
         </h1>
 
 
         <p>
-          Review your recent cognitive
-          game performance.
+          {text.performancePageDescription}
         </p>
 
       </header>
@@ -137,7 +139,7 @@ function PerformanceDashboard({ onBack }) {
 
       {loading && (
         <div className="performance-message">
-          Loading performance data...
+          {text.loadingPerformance}
         </div>
       )}
 
@@ -161,7 +163,7 @@ function PerformanceDashboard({ onBack }) {
               </strong>
 
               <span>
-                Total Sessions
+                {text.totalSessions}
               </span>
             </div>
 
@@ -172,7 +174,7 @@ function PerformanceDashboard({ onBack }) {
               </strong>
 
               <span>
-                Games Played
+                {text.gamesPlayed}
               </span>
             </div>
 
@@ -183,7 +185,7 @@ function PerformanceDashboard({ onBack }) {
               </strong>
 
               <span>
-                Average Accuracy
+                {text.averageAccuracy}
               </span>
             </div>
 
@@ -196,7 +198,7 @@ function PerformanceDashboard({ onBack }) {
               </strong>
 
               <span>
-                Average Time
+                {text.averageTime}
               </span>
             </div>
 
@@ -211,13 +213,11 @@ function PerformanceDashboard({ onBack }) {
               <div>
 
                 <h2>
-                  Recent Sessions
+                  {text.recentSessions}
                 </h2>
 
                 <p>
-                  Data loaded from your
-                  account through FastAPI
-                  and PostgreSQL.
+                  {text.performanceDataSource}
                 </p>
 
               </div>
@@ -228,7 +228,7 @@ function PerformanceDashboard({ onBack }) {
             {sessions.length === 0 ? (
 
               <div className="performance-empty">
-                No game sessions recorded yet.
+                {text.noSessions}
               </div>
 
             ) : (
@@ -260,25 +260,25 @@ function PerformanceDashboard({ onBack }) {
                       <div className="performance-item-data">
 
                         <span>
-                          Difficulty:{' '}
+                          {text.difficulty}:{' '}
                           {session.difficulty}
                         </span>
 
 
                         <span>
-                          Accuracy:{' '}
+                          {text.accuracy}:{' '}
                           {session.accuracy}%
                         </span>
 
 
                         <span>
-                          Mistakes:{' '}
+                          {text.mistakes}:{' '}
                           {session.mistakes}
                         </span>
 
 
                         <span>
-                          Time:{' '}
+                          {text.time}:{' '}
                           {formatTime(
                             session.time,
                           )}

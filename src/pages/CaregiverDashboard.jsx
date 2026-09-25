@@ -5,67 +5,134 @@ import './CaregiverDashboard.css'
 import { apiGet } from '../utils/api'
 
 
-function CaregiverDashboard({ onBack }) {
+function CaregiverDashboard({
+  onBack,
+  user,
+  text,
+}) {
   const [sessions, setSessions] = useState([])
   const [memories, setMemories] = useState([])
   const [reminders, setReminders] = useState([])
-  const [recommendation, setRecommendation] = useState(null)
+
+  const [linkedElderly, setLinkedElderly] =
+    useState(null)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true)
-        setError('')
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      setError('')
 
-        const [
-          sessionsData,
-          memoriesData,
-          remindersData,
-          recommendationData,
-        ] = await Promise.all([
-          apiGet('/game-sessions'),
-          apiGet('/memories'),
-          apiGet('/reminders'),
-          apiGet('/recommendation'),
-        ])
+      // ------------------------------------------------------
+      // Caregiver-only access
+      // ------------------------------------------------------
 
-        setSessions(
-          sessionsData.sessions || [],
-        )
-
-        setMemories(
-          memoriesData.memories || [],
-        )
-
-        setReminders(
-          remindersData.reminders || [],
-        )
-
-        setRecommendation(
-          recommendationData.recommendation || null,
-        )
-      } catch (err) {
-        console.error(
-          'Could not load caregiver dashboard data:',
-          err,
-        )
+      if (user?.role !== 'caregiver') {
+        setSessions([])
+        setMemories([])
+        setReminders([])
+        setLinkedElderly(null)
 
         setError(
-          err.message ||
-            'Could not load caregiver dashboard.',
+          text.caregiverOnlyError,
         )
-      } finally {
-        setLoading(false)
+
+        return
       }
+
+
+      // ------------------------------------------------------
+      // Find caregiver connections
+      // ------------------------------------------------------
+
+      const linksData = await apiGet(
+        '/caregiver-links',
+      )
+
+      const links = Array.isArray(
+        linksData,
+      )
+        ? linksData
+        : []
+
+
+      // ------------------------------------------------------
+      // Find approved connection
+      // ------------------------------------------------------
+
+      const approvedLink =
+        links.find(
+          (link) =>
+            link.status === 'approved',
+        )
+
+
+      // ------------------------------------------------------
+      // No approved elderly connection
+      // ------------------------------------------------------
+
+      if (!approvedLink) {
+        setSessions([])
+        setMemories([])
+        setReminders([])
+        setLinkedElderly(null)
+
+        return
+      }
+
+
+      // ------------------------------------------------------
+      // Load linked elderly data
+      // ------------------------------------------------------
+
+      const linkedData =
+        await apiGet(
+          `/caregiver-links/${approvedLink.id}/data`,
+        )
+
+
+      setLinkedElderly(
+        linkedData.elderly_user || null,
+      )
+
+      setSessions(
+        linkedData.sessions || [],
+      )
+
+      setMemories(
+        linkedData.memories || [],
+      )
+
+      setReminders(
+        linkedData.reminders || [],
+      )
+    } catch (err) {
+      console.error(
+        'Could not load caregiver dashboard data:',
+        err,
+      )
+
+      setError(
+        err.message ||
+          text.loadError,
+      )
+    } finally {
+      setLoading(false)
     }
+  }
 
+
+  useEffect(() => {
     loadData()
-  }, [])
+  }, [user])
 
+
+  // ==========================================================
+  // Format Time
+  // ==========================================================
 
   const formatTime = (seconds) => {
     const totalSeconds =
@@ -78,44 +145,65 @@ function CaregiverDashboard({ onBack }) {
     const remainingSeconds =
       totalSeconds % 60
 
-    return `${String(minutes).padStart(
-      2,
-      '0',
-    )}:${String(
+    return `${String(
+      minutes,
+    ).padStart(2, '0')}:${String(
       remainingSeconds,
     ).padStart(2, '0')}`
   }
 
 
+  // ==========================================================
+  // Format Date
+  // ==========================================================
+
   const formatDate = (value) => {
     if (!value) {
-      return 'Unknown'
+      return text.unknown
     }
 
     const date = new Date(value)
 
-    if (Number.isNaN(date.getTime())) {
-      return 'Unknown'
+    if (
+      Number.isNaN(
+        date.getTime(),
+      )
+    ) {
+      return text.unknown
     }
 
     return date.toLocaleString()
   }
 
 
-  const formatReminderDate = (value) => {
+  // ==========================================================
+  // Format Reminder Date
+  // ==========================================================
+
+  const formatReminderDate = (
+    value,
+  ) => {
     if (!value) {
-      return 'No due date'
+      return text.noDueDate
     }
 
     const date = new Date(value)
 
-    if (Number.isNaN(date.getTime())) {
+    if (
+      Number.isNaN(
+        date.getTime(),
+      )
+    ) {
       return value
     }
 
     return date.toLocaleString()
   }
 
+
+  // ==========================================================
+  // Summary Statistics
+  // ==========================================================
 
   const averageAccuracy =
     sessions.length === 0
@@ -162,6 +250,10 @@ function CaregiverDashboard({ onBack }) {
       .slice(0, 5)
 
 
+  // ==========================================================
+  // Game Helpers
+  // ==========================================================
+
   const getGameSessions = (
     gameName,
   ) =>
@@ -175,9 +267,13 @@ function CaregiverDashboard({ onBack }) {
     gameName,
   ) => {
     const gameSessions =
-      getGameSessions(gameName)
+      getGameSessions(
+        gameName,
+      )
 
-    if (gameSessions.length === 0) {
+    if (
+      gameSessions.length === 0
+    ) {
       return '—'
     }
 
@@ -201,9 +297,13 @@ function CaregiverDashboard({ onBack }) {
     gameName,
   ) => {
     const gameSessions =
-      getGameSessions(gameName)
+      getGameSessions(
+        gameName,
+      )
 
-    if (gameSessions.length === 0) {
+    if (
+      gameSessions.length === 0
+    ) {
       return null
     }
 
@@ -227,10 +327,14 @@ function CaregiverDashboard({ onBack }) {
     gameName,
   ) => {
     const gameSessions =
-      getGameSessions(gameName)
+      getGameSessions(
+        gameName,
+      )
 
-    if (gameSessions.length < 2) {
-      return 'Not enough data'
+    if (
+      gameSessions.length < 2
+    ) {
+      return text.notEnoughData
     }
 
     const recent =
@@ -248,14 +352,14 @@ function CaregiverDashboard({ onBack }) {
       )
 
     if (difference > 5) {
-      return 'Improving'
+      return text.improving
     }
 
     if (difference < -5) {
-      return 'Declining'
+      return text.declining
     }
 
-    return 'Stable'
+    return text.stable
   }
 
 
@@ -266,8 +370,37 @@ function CaregiverDashboard({ onBack }) {
   ]
 
 
+  const getGameDisplayName = (
+    gameName,
+  ) => {
+    const gameLabels = {
+      'Memory Match':
+        text.games.memoryMatch,
+
+      'Sequence Memory':
+        text.games.sequenceMemory,
+
+      'Object Recall':
+        text.games.objectRecall,
+    }
+
+    return (
+      gameLabels[gameName] ||
+      gameName
+    )
+  }
+
+
+  // ==========================================================
+  // Render
+  // ==========================================================
+
   return (
     <div className="caregiver-page">
+
+      {/* ====================================================
+          Header
+          ==================================================== */}
 
       <header className="caregiver-header">
 
@@ -276,29 +409,51 @@ function CaregiverDashboard({ onBack }) {
           className="caregiver-back-button"
           onClick={onBack}
         >
-          ← Back to Dashboard
+          ← {text.backToDashboard}
         </button>
 
 
         <h1>
-          👤 Caregiver Dashboard
+          👤 {text.caregiverDashboardTitle}
         </h1>
 
 
         <p>
-          Review recent cognitive activity
-          and important daily information.
+          {text.caregiverDashboardDescription}
         </p>
+
+
+        {linkedElderly && (
+          <div className="caregiver-linked-user">
+
+            <span>
+              {text.currentlyViewing}
+            </span>
+
+            <strong>
+              {linkedElderly.full_name}
+            </strong>
+
+          </div>
+        )}
 
       </header>
 
 
+      {/* ====================================================
+          Loading
+          ==================================================== */}
+
       {loading && (
         <div className="caregiver-message">
-          Loading caregiver data...
+          {text.loadingCaregiverData}
         </div>
       )}
 
+
+      {/* ====================================================
+          Error
+          ==================================================== */}
 
       {!loading && error && (
         <div className="caregiver-message caregiver-message--error">
@@ -307,373 +462,407 @@ function CaregiverDashboard({ onBack }) {
       )}
 
 
-      {!loading && !error && (
-        <>
+      {/* ====================================================
+          No approved connection
+          ==================================================== */}
 
-          {/* Summary */}
-          <section className="caregiver-summary">
+      {!loading &&
+        !error &&
+        !linkedElderly && (
+          <section className="caregiver-empty">
 
-            <div className="caregiver-stat">
-              <strong>
-                {sessions.length}
-              </strong>
+            <h2>
+              {text.noApprovedConnection}
+            </h2>
 
-              <span>
-                Total Sessions
-              </span>
-            </div>
-
-
-            <div className="caregiver-stat">
-              <strong>
-                {gameTypes}
-              </strong>
-
-              <span>
-                Games Played
-              </span>
-            </div>
-
-
-            <div className="caregiver-stat">
-              <strong>
-                {averageAccuracy}%
-              </strong>
-
-              <span>
-                Average Accuracy
-              </span>
-            </div>
-
-
-            <div className="caregiver-stat">
-              <strong>
-                {memories.length}
-              </strong>
-
-              <span>
-                Saved Memories
-              </span>
-            </div>
-
-
-            <div className="caregiver-stat">
-              <strong>
-                {
-                  reminders.filter(
-                    (reminder) =>
-                      !reminder.completed,
-                  ).length
-                }
-              </strong>
-
-              <span>
-                Active Reminders
-              </span>
-            </div>
+            <p>
+              {text.noApprovedConnectionDescription}
+            </p>
 
           </section>
+        )}
 
 
-          {/* Personalized Activity */}
-          {recommendation && (
+      {/* ====================================================
+          Linked Elderly Data
+          ==================================================== */}
+
+      {!loading &&
+        !error &&
+        linkedElderly && (
+          <>
+
+            {/* ==================================================
+                Summary
+                ================================================== */}
+
+            <section className="caregiver-summary">
+
+              <div className="caregiver-stat">
+                <strong>
+                  {sessions.length}
+                </strong>
+
+                <span>
+                  {text.totalSessions}
+                </span>
+              </div>
+
+
+              <div className="caregiver-stat">
+                <strong>
+                  {gameTypes}
+                </strong>
+
+                <span>
+                  {text.gamesPlayed}
+                </span>
+              </div>
+
+
+              <div className="caregiver-stat">
+                <strong>
+                  {averageAccuracy}%
+                </strong>
+
+                <span>
+                  {text.averageAccuracy}
+                </span>
+              </div>
+
+
+              <div className="caregiver-stat">
+                <strong>
+                  {memories.length}
+                </strong>
+
+                <span>
+                  {text.savedMemories}
+                </span>
+              </div>
+
+
+              <div className="caregiver-stat">
+                <strong>
+                  {
+                    reminders.filter(
+                      (reminder) =>
+                        !reminder.completed,
+                    ).length
+                  }
+                </strong>
+
+                <span>
+                  {text.activeReminders}
+                </span>
+              </div>
+
+            </section>
+
+
+            {/* ==================================================
+                Linked User Notice
+                ================================================== */}
+
             <section className="caregiver-recommendation">
 
               <span className="caregiver-section-label">
-                Personalized Activity
+                {text.connectedUser}
               </span>
 
 
               <h2>
-                {recommendation.game}
+                {linkedElderly.full_name}
               </h2>
 
 
-              <p>
-                Suggested difficulty:{' '}
-                <strong>
-                  {recommendation.difficulty}
-                </strong>
-              </p>
-
-
               <p className="caregiver-recommendation-reason">
-                {recommendation.reason}
+                {text.connectedUserDescription}
               </p>
 
             </section>
-          )}
 
 
-          {/* Game Performance */}
-          <section className="caregiver-game-summary">
+            {/* ==================================================
+                Game Performance
+                ================================================== */}
 
-            <h2>
-              Game Performance
-            </h2>
+            <section className="caregiver-game-summary">
 
-
-            <div className="caregiver-game-grid">
-
-              {gameNames.map(
-                (gameName) => {
-
-                  const count =
-                    getGameSessions(
-                      gameName,
-                    ).length
+              <h2>
+                {text.gamePerformance}
+              </h2>
 
 
-                  const recentAccuracy =
-                    getRecentGameAccuracy(
-                      gameName,
-                    )
+              <div className="caregiver-game-grid">
+
+                {gameNames.map(
+                  (gameName) => {
+
+                    const count =
+                      getGameSessions(
+                        gameName,
+                      ).length
 
 
-                  return (
-                    <article
-                      className="caregiver-game-card"
-                      key={gameName}
-                    >
-
-                      <h3>
-                        {gameName}
-                      </h3>
+                    const recentAccuracy =
+                      getRecentGameAccuracy(
+                        gameName,
+                      )
 
 
-                      <strong>
-                        {getGameAverage(
-                          gameName,
-                        )}
-                      </strong>
-
-
-                      <span>
-                        {count}{' '}
-                        {count === 1
-                          ? 'session'
-                          : 'sessions'}
-                      </span>
-
-
-                      <div className="caregiver-game-meta">
-
-                        <span>
-                          Trend:{' '}
-                          {getGameTrend(
-                            gameName,
-                          )}
-                        </span>
-
-
-                        <span>
-                          Recent:{' '}
-                          {recentAccuracy ===
-                          null
-                            ? '—'
-                            : `${Math.round(
-                                recentAccuracy,
-                              )}%`}
-                        </span>
-
-                      </div>
-
-                    </article>
-                  )
-                },
-              )}
-
-            </div>
-
-          </section>
-
-
-          {/* Upcoming Reminders */}
-          <section className="caregiver-reminders-section">
-
-            <div className="caregiver-section-heading">
-
-              <div>
-
-                <span className="caregiver-section-label">
-                  Planning
-                </span>
-
-
-                <h2>
-                  Upcoming Reminders
-                </h2>
-
-
-                <p>
-                  The next active reminders
-                  currently stored for this user.
-                </p>
-
-              </div>
-
-            </div>
-
-
-            {upcomingReminders.length ===
-            0 ? (
-
-              <div className="caregiver-empty">
-                No upcoming active reminders.
-              </div>
-
-            ) : (
-
-              <div className="caregiver-reminder-list">
-
-                {upcomingReminders.map(
-                  (reminder) => (
-                    <article
-                      className="caregiver-reminder-item"
-                      key={reminder.id}
-                    >
-
-                      <div>
+                    return (
+                      <article
+                        className="caregiver-game-card"
+                        key={gameName}
+                      >
 
                         <h3>
-                          {reminder.title}
+                          {getGameDisplayName(
+                            gameName,
+                          )}
                         </h3>
 
 
-                        <p>
-                          {
-                            reminder.description
-                          }
-                        </p>
+                        <strong>
+                          {getGameAverage(
+                            gameName,
+                          )}
+                        </strong>
 
-                      </div>
-
-
-                      <div className="caregiver-reminder-meta">
 
                         <span>
-                          {
-                            reminder.category
-                          }
+                          {count}{' '}
+                          {count === 1
+                            ? text.session
+                            : text.sessions}
                         </span>
 
 
-                        <time>
-                          {formatReminderDate(
-                            reminder.dueDatetime,
-                          )}
-                        </time>
+                        <div className="caregiver-game-meta">
 
-                      </div>
+                          <span>
+                            {text.trend}:{' '}
+                            {getGameTrend(
+                              gameName,
+                            )}
+                          </span>
 
-                    </article>
-                  ),
+
+                          <span>
+                            {text.recent}:{' '}
+                            {recentAccuracy ===
+                            null
+                              ? '—'
+                              : `${Math.round(
+                                  recentAccuracy,
+                                )}%`}
+                          </span>
+
+                        </div>
+
+                      </article>
+                    )
+                  },
                 )}
 
               </div>
 
-            )}
-
-          </section>
+            </section>
 
 
-          {/* Recent Activity */}
-          <section className="caregiver-recent">
+            {/* ==================================================
+                Upcoming Reminders
+                ================================================== */}
 
-            <h2>
-              Recent Activity
-            </h2>
+            <section className="caregiver-reminders-section">
 
+              <div className="caregiver-section-heading">
 
-            {recentSessions.length ===
-            0 ? (
+                <div>
 
-              <div className="caregiver-empty">
-                No sessions recorded yet.
-              </div>
-
-            ) : (
-
-              <div className="caregiver-table-wrapper">
-
-                <table className="caregiver-table">
-
-                  <thead>
-                    <tr>
-                      <th>Game</th>
-                      <th>Difficulty</th>
-                      <th>Accuracy</th>
-                      <th>Mistakes</th>
-                      <th>Time</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
+                  <span className="caregiver-section-label">
+                    {text.planning}
+                  </span>
 
 
-                  <tbody>
-
-                    {recentSessions.map(
-                      (session) => (
-                        <tr
-                          key={session.id}
-                        >
-
-                          <td>
-                            {session.game}
-                          </td>
+                  <h2>
+                    {text.upcomingReminders}
+                  </h2>
 
 
-                          <td>
-                            {
-                              session.difficulty
-                            }
-                          </td>
+                  <p>
+                    {text.upcomingRemindersDescription}
+                  </p>
 
-
-                          <td>
-                            {
-                              session.accuracy
-                            }%
-                          </td>
-
-
-                          <td>
-                            {
-                              session.mistakes
-                            }
-                          </td>
-
-
-                          <td>
-                            {formatTime(
-                              session.time,
-                            )}
-                          </td>
-
-
-                          <td>
-                            {formatDate(
-                              session.created_at,
-                            )}
-                          </td>
-
-                        </tr>
-                      ),
-                    )}
-
-                  </tbody>
-
-                </table>
+                </div>
 
               </div>
 
-            )}
 
-          </section>
+              {upcomingReminders.length ===
+              0 ? (
 
-        </>
+                <div className="caregiver-empty">
+                  {text.noUpcomingReminders}
+                </div>
 
-      )}
+              ) : (
+
+                <div className="caregiver-reminder-list">
+
+                  {upcomingReminders.map(
+                    (reminder) => (
+                      <article
+                        className="caregiver-reminder-item"
+                        key={reminder.id}
+                      >
+
+                        <div>
+
+                          <h3>
+                            {reminder.title}
+                          </h3>
+
+
+                          <p>
+                            {
+                              reminder.description
+                            }
+                          </p>
+
+                        </div>
+
+
+                        <div className="caregiver-reminder-meta">
+
+                          <span>
+                            {
+                              reminder.category
+                            }
+                          </span>
+
+
+                          <time>
+                            {formatReminderDate(
+                              reminder.dueDatetime,
+                            )}
+                          </time>
+
+                        </div>
+
+                      </article>
+                    ),
+                  )}
+
+                </div>
+
+              )}
+
+            </section>
+
+
+            {/* ==================================================
+                Recent Activity
+                ================================================== */}
+
+            <section className="caregiver-recent">
+
+              <h2>
+                {text.recentActivity}
+              </h2>
+
+
+              {recentSessions.length ===
+              0 ? (
+
+                <div className="caregiver-empty">
+                  {text.noSessionsRecorded}
+                </div>
+
+              ) : (
+
+                <div className="caregiver-table-wrapper">
+
+                  <table className="caregiver-table">
+
+                    <thead>
+                      <tr>
+                        <th>{text.game}</th>
+                        <th>{text.difficulty}</th>
+                        <th>{text.accuracy}</th>
+                        <th>{text.mistakes}</th>
+                        <th>{text.time}</th>
+                        <th>{text.date}</th>
+                      </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                      {recentSessions.map(
+                        (session) => (
+                          <tr
+                            key={session.id}
+                          >
+
+                            <td>
+                              {getGameDisplayName(
+                                session.game,
+                              )}
+                            </td>
+
+
+                            <td>
+                              {
+                                session.difficulty
+                              }
+                            </td>
+
+
+                            <td>
+                              {
+                                session.accuracy
+                              }%
+                            </td>
+
+
+                            <td>
+                              {
+                                session.mistakes
+                              }
+                            </td>
+
+
+                            <td>
+                              {formatTime(
+                                session.time,
+                              )}
+                            </td>
+
+
+                            <td>
+                              {formatDate(
+                                session.created_at,
+                              )}
+                            </td>
+
+                          </tr>
+                        ),
+                      )}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              )}
+
+            </section>
+
+          </>
+        )}
 
     </div>
   )

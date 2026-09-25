@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+
 import './CognitiveGames.css'
+
 import MemoryMatch from './MemoryMatch'
 import SequenceMemory from './SequenceMemory'
 import ObjectRecall from './ObjectRecall'
+
 
 // ============================================
 // Game Card Component
@@ -27,13 +30,19 @@ function GameCard({
         {icon}
       </span>
 
-      <h2 className="game-card-title">{title}</h2>
+      <h2 className="game-card-title">
+        {title}
+      </h2>
 
-      <p className="game-card-description">{description}</p>
+      <p className="game-card-description">
+        {description}
+      </p>
 
       <button
         type="button"
-        className={`game-card-button${isAvailable ? '' : ' game-card-button--disabled'
+        className={`game-card-button${isAvailable
+            ? ''
+            : ' game-card-button--disabled'
           }`}
         disabled={!isAvailable}
         onClick={onClick}
@@ -45,12 +54,16 @@ function GameCard({
   )
 }
 
+
 // ============================================
 // Cognitive Games Page
 // ============================================
 
 function CognitiveGames({
   text,
+  memoryMatchText,
+  sequenceMemoryText,
+  objectRecallText,
   onNavigate,
   initialGame = null,
   initialDifficulty = null,
@@ -64,57 +77,95 @@ function CognitiveGames({
     }
   }, [initialGame])
 
-  // -----------------------------
+
+  // ==========================================
   // Open Memory Match
-  // -----------------------------
-  if (selectedGame === 'memory-match') {
+  // ==========================================
+
+  if (
+    selectedGame === 'memory-match'
+  ) {
     return (
       <MemoryMatch
-        onBack={() => setSelectedGame(null)}
+        text={memoryMatchText}
+        onBack={() =>
+          setSelectedGame(null)
+        }
       />
     )
   }
 
-  // -----------------------------
+
+  // ==========================================
   // Open Sequence Memory
-  // -----------------------------
-  if (selectedGame === 'sequence-memory') {
+  // ==========================================
+
+  if (
+    selectedGame === 'sequence-memory'
+  ) {
     return (
       <SequenceMemory
+        text={sequenceMemoryText}
         initialDifficulty={
           initialDifficulty || 'Easy'
         }
-        onBack={() => setSelectedGame(null)}
+        onBack={() =>
+          setSelectedGame(null)
+        }
       />
     )
   }
-  // ----------------------------
+
+
+  // ==========================================
   // Open Object Recall
-  // -----------------------------
+  // ==========================================
+
   if (selectedGame === 'object-recall') {
     return (
       <ObjectRecall
-        initialDifficulty={
-          initialDifficulty || 'Easy'
-        }
+        text={objectRecallText}
+        initialDifficulty={initialDifficulty || 'Easy'}
         onBack={() => setSelectedGame(null)}
       />
     )
   }
 
+  // ==========================================
+  // Game Card Click Handler
+  // ==========================================
+
+  const handleGameClick = (
+    gameId,
+  ) => {
+    setSelectedGame(gameId)
+  }
+
+
   return (
     <div className="games-page">
-      {/* --- Back Button --- */}
+
+      {/* ======================================
+          Back Button
+          ====================================== */}
+
       <button
         type="button"
         className="back-button"
-        onClick={() => onNavigate('dashboard')}
+        onClick={() =>
+          onNavigate('dashboard')
+        }
       >
         ← {text.backButton}
       </button>
 
-      {/* --- Page Header --- */}
+
+      {/* ======================================
+          Page Header
+          ====================================== */}
+
       <header className="games-header">
+
         <span
           className="games-header-icon"
           role="img"
@@ -123,38 +174,51 @@ function CognitiveGames({
           {text.icon}
         </span>
 
+
         <h1 className="games-title">
           {text.title}
         </h1>
 
+
         <p className="games-subtitle">
           {text.subtitle}
         </p>
+
       </header>
 
-      {/* --- Game Cards --- */}
+
+      {/* ======================================
+          Game Cards
+          ====================================== */}
+
       <main className="games-grid">
-        {text.games.map((game) => (
-          <GameCard
-            key={game.id}
-            icon={game.icon}
-            title={game.title}
-            description={game.description}
-            buttonLabel={game.button}
-            onClick={
-              game.title === 'Memory Match'
-                ? () => setSelectedGame('memory-match')
-                : game.title === 'Sequence Memory'
-                  ? () => setSelectedGame('sequence-memory')
-                  : game.title === 'Object Recall'
-                    ? () => setSelectedGame('object-recall')
-                    : undefined
-            }
-          />
-        ))}
+
+        {text.games.map(
+          (game) => (
+            <GameCard
+              key={game.id}
+              icon={game.icon}
+              title={game.title}
+              description={
+                game.description
+              }
+              buttonLabel={
+                game.button
+              }
+              onClick={() =>
+                handleGameClick(
+                  game.id,
+                )
+              }
+            />
+          ),
+        )}
+
       </main>
+
     </div>
   )
 }
+
 
 export default CognitiveGames

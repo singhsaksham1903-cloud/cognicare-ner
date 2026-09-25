@@ -18,7 +18,10 @@ const EMPTY_FORM = {
 }
 
 
-function Memories({ onBack }) {
+function Memories({
+  onBack,
+  text,
+}) {
   const [memories, setMemories] = useState([])
 
   const [form, setForm] =
@@ -59,7 +62,7 @@ function Memories({ onBack }) {
 
       setError(
         err.message ||
-          'Could not load memories from the server.',
+          text.loadError,
       )
     } finally {
       setLoading(false)
@@ -101,7 +104,7 @@ function Memories({ onBack }) {
       !form.description.trim()
     ) {
       setError(
-        'Please enter both a title and description.',
+        text.validationError,
       )
       return
     }
@@ -130,7 +133,7 @@ function Memories({ onBack }) {
         )
 
         setMessage(
-          'Memory updated successfully.',
+          text.updateSuccess,
         )
       } else {
         await apiPost(
@@ -139,7 +142,7 @@ function Memories({ onBack }) {
         )
 
         setMessage(
-          'Memory saved successfully.',
+          text.saveSuccess,
         )
       }
 
@@ -154,7 +157,7 @@ function Memories({ onBack }) {
 
       setError(
         err.message ||
-          'Could not save the memory.',
+          text.saveError,
       )
     } finally {
       setSaving(false)
@@ -197,7 +200,7 @@ function Memories({ onBack }) {
   ) => {
     const confirmed =
       window.confirm(
-        'Are you sure you want to delete this memory?',
+        text.deleteConfirm,
       )
 
     if (!confirmed) {
@@ -219,7 +222,7 @@ function Memories({ onBack }) {
       }
 
       setMessage(
-        'Memory deleted successfully.',
+        text.deleteSuccess,
       )
 
       await loadMemories()
@@ -231,7 +234,7 @@ function Memories({ onBack }) {
 
       setError(
         err.message ||
-          'Could not delete the memory.',
+          text.deleteError,
       )
     }
   }
@@ -241,7 +244,7 @@ function Memories({ onBack }) {
     value,
   ) => {
     if (!value) {
-      return 'No date provided'
+      return text.noDate
     }
 
     const parsedDate =
@@ -269,19 +272,17 @@ function Memories({ onBack }) {
           className="memories-back-button"
           onClick={onBack}
         >
-          ← Back to Dashboard
+          ← {text.backToDashboard}
         </button>
 
 
         <h1>
-          Memories
+          {text.memoriesTitle}
         </h1>
 
 
         <p>
-          Save important moments,
-          stories, and people you
-          want to remember.
+          {text.memoriesDescription}
         </p>
 
       </header>
@@ -308,8 +309,8 @@ function Memories({ onBack }) {
 
           <h2>
             {editingId !== null
-              ? 'Edit Memory'
-              : 'Add a Memory'}
+              ? text.editMemory
+              : text.addMemory}
           </h2>
 
 
@@ -319,21 +320,23 @@ function Memories({ onBack }) {
           >
 
             <label>
-              Title
+              {text.title}
 
               <input
                 type="text"
                 name="title"
                 value={form.title}
                 onChange={handleChange}
-                placeholder="e.g. Family trip to Agra"
+                placeholder={
+                  text.titlePlaceholder
+                }
                 maxLength={200}
               />
             </label>
 
 
             <label>
-              Description
+              {text.description}
 
               <textarea
                 name="description"
@@ -341,7 +344,9 @@ function Memories({ onBack }) {
                   form.description
                 }
                 onChange={handleChange}
-                placeholder="Write about this memory..."
+                placeholder={
+                  text.descriptionPlaceholder
+                }
                 rows={5}
                 maxLength={5000}
               />
@@ -349,7 +354,7 @@ function Memories({ onBack }) {
 
 
             <label>
-              Category
+              {text.category}
 
               <select
                 name="category"
@@ -357,38 +362,38 @@ function Memories({ onBack }) {
                 onChange={handleChange}
               >
                 <option value="General">
-                  General
+                  {text.categories.General}
                 </option>
 
                 <option value="Family">
-                  Family
+                  {text.categories.Family}
                 </option>
 
                 <option value="Friends">
-                  Friends
+                  {text.categories.Friends}
                 </option>
 
                 <option value="Travel">
-                  Travel
+                  {text.categories.Travel}
                 </option>
 
                 <option value="Celebration">
-                  Celebration
+                  {text.categories.Celebration}
                 </option>
 
                 <option value="Childhood">
-                  Childhood
+                  {text.categories.Childhood}
                 </option>
 
                 <option value="Other">
-                  Other
+                  {text.categories.Other}
                 </option>
               </select>
             </label>
 
 
             <label>
-              Memory Date
+              {text.memoryDate}
 
               <input
                 type="date"
@@ -409,10 +414,10 @@ function Memories({ onBack }) {
                 disabled={saving}
               >
                 {saving
-                  ? 'Saving...'
+                  ? text.saving
                   : editingId !== null
-                    ? 'Update Memory'
-                    : 'Save Memory'}
+                    ? text.updateMemory
+                    : text.saveMemory}
               </button>
 
 
@@ -422,7 +427,7 @@ function Memories({ onBack }) {
                   className="memory-secondary-button"
                   onClick={resetForm}
                 >
-                  Cancel Edit
+                  {text.cancelEdit}
                 </button>
               )}
 
@@ -441,13 +446,11 @@ function Memories({ onBack }) {
             <div>
 
               <h2>
-                Saved Memories
+                {text.savedMemories}
               </h2>
 
               <p>
-                Your memories are
-                stored securely in
-                your account.
+                {text.savedMemoriesDescription}
               </p>
 
             </div>
@@ -457,8 +460,8 @@ function Memories({ onBack }) {
               {memories.length}{' '}
 
               {memories.length === 1
-                ? 'memory'
-                : 'memories'}
+                ? text.memory
+                : text.memoriesPlural}
             </span>
 
           </div>
@@ -467,14 +470,13 @@ function Memories({ onBack }) {
           {loading ? (
 
             <div className="memory-empty">
-              Loading memories...
+              {text.loadingMemories}
             </div>
 
           ) : memories.length === 0 ? (
 
             <div className="memory-empty">
-              No memories have been
-              saved yet.
+              {text.noMemories}
             </div>
 
           ) : (
@@ -498,7 +500,12 @@ function Memories({ onBack }) {
 
 
                         <span className="memory-category">
-                          {memory.category}
+                          {
+                            text.categories[
+                              memory.category
+                            ] ||
+                              memory.category
+                          }
                         </span>
 
                       </div>
@@ -529,7 +536,7 @@ function Memories({ onBack }) {
                           )
                         }
                       >
-                        Edit
+                        {text.edit}
                       </button>
 
 
@@ -542,7 +549,7 @@ function Memories({ onBack }) {
                           )
                         }
                       >
-                        Delete
+                        {text.delete}
                       </button>
 
                     </div>

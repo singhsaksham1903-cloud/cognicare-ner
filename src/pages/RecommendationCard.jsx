@@ -5,7 +5,10 @@ import './RecommendationCard.css'
 import { apiGet } from '../utils/api'
 
 
-function RecommendationCard({ onStart }) {
+function RecommendationCard({
+  onStart,
+  text,
+}) {
   const [recommendation, setRecommendation] =
     useState(null)
 
@@ -38,7 +41,7 @@ function RecommendationCard({ onStart }) {
 
         setError(
           err.message ||
-            'Recommendation is currently unavailable.',
+            text.unavailable,
         )
       } finally {
         setLoading(false)
@@ -79,12 +82,11 @@ function RecommendationCard({ onStart }) {
 
         <div>
           <h2>
-            Personalized Recommendation
+            {text.title}
           </h2>
 
           <p>
-            Analyzing your recent
-            performance...
+            {text.analyzing}
           </p>
         </div>
 
@@ -106,12 +108,12 @@ function RecommendationCard({ onStart }) {
 
         <div>
           <h2>
-            Personalized Recommendation
+            {text.title}
           </h2>
 
           <p>
             {error ||
-              'No recommendation available yet.'}
+              text.noRecommendation}
           </p>
         </div>
 
@@ -133,6 +135,45 @@ function RecommendationCard({ onStart }) {
     recommendation.game_summaries?.[game]
 
 
+  const getGameDisplayName = (
+    gameName,
+  ) => {
+    const gameNames = {
+      'Memory Match':
+        text.games.memoryMatch,
+
+      'Sequence Memory':
+        text.games.sequenceMemory,
+
+      'Object Recall':
+        text.games.objectRecall,
+    }
+
+    return (
+      gameNames[gameName] ||
+      gameName
+    )
+  }
+
+
+  const getPerformanceStatus = (
+    status,
+  ) => {
+    const statusMap = {
+      Improving: text.improving,
+      Declining: text.declining,
+      Stable: text.stable,
+      'Not enough data':
+        text.notEnoughData,
+    }
+
+    return (
+      statusMap[status] ||
+      status
+    )
+  }
+
+
   return (
     <article className="recommendation-card">
 
@@ -144,28 +185,35 @@ function RecommendationCard({ onStart }) {
       <div className="recommendation-content">
 
         <span className="recommendation-label">
-          Personalized Recommendation
+          {text.title}
         </span>
 
 
-        <h2>{game}</h2>
+        <h2>
+          {getGameDisplayName(game)}
+        </h2>
 
 
         <div className="recommendation-difficulty">
-          Suggested difficulty:{' '}
+          {text.suggestedDifficulty}{' '}
           <strong>
             {difficulty}
           </strong>
         </div>
 
 
-        <p>{reason}</p>
+        <p>
+          {reason}
+        </p>
 
 
         <small>
-          Based on{' '}
+          {text.basedOn}{' '}
           {recommendation.based_on_sessions}{' '}
-          recorded game sessions.
+          {recommendation.based_on_sessions === 1
+            ? text.session
+            : text.sessions}
+          .
         </small>
 
 
@@ -173,10 +221,13 @@ function RecommendationCard({ onStart }) {
           type="button"
           className="recommendation-start-button"
           onClick={() =>
-            onStart(game, difficulty)
+            onStart(
+              game,
+              difficulty,
+            )
           }
         >
-          Start Recommended Game
+          {text.startRecommendedGame}
         </button>
 
 
@@ -191,8 +242,8 @@ function RecommendationCard({ onStart }) {
           aria-expanded={showDetails}
         >
           {showDetails
-            ? 'Hide recommendation details'
-            : 'Why this recommendation?'}
+            ? text.hideDetails
+            : text.whyRecommendation}
         </button>
 
 
@@ -201,7 +252,7 @@ function RecommendationCard({ onStart }) {
             <div className="recommendation-details">
 
               <h3>
-                Why this recommendation?
+                {text.whyRecommendation}
               </h3>
 
 
@@ -209,7 +260,7 @@ function RecommendationCard({ onStart }) {
 
                 <div>
                   <span>
-                    Recent accuracy
+                    {text.recentAccuracy}
                   </span>
 
                   <strong>
@@ -222,7 +273,7 @@ function RecommendationCard({ onStart }) {
 
                 <div>
                   <span>
-                    Overall accuracy
+                    {text.overallAccuracy}
                   </span>
 
                   <strong>
@@ -235,7 +286,7 @@ function RecommendationCard({ onStart }) {
 
                 <div>
                   <span>
-                    Mistakes per session
+                    {text.mistakesPerSession}
                   </span>
 
                   <strong>
@@ -248,18 +299,22 @@ function RecommendationCard({ onStart }) {
 
                 <div>
                   <span>
-                    Performance trend
+                    {text.performanceTrend}
                   </span>
 
                   <strong>
-                    {performance_status}
+                    {
+                      getPerformanceStatus(
+                        performance_status,
+                      )
+                    }
                   </strong>
                 </div>
 
 
                 <div>
                   <span>
-                    Sessions analyzed
+                    {text.sessionsAnalyzed}
                   </span>
 
                   <strong>
@@ -273,9 +328,7 @@ function RecommendationCard({ onStart }) {
 
 
               <p>
-                The recommendation is based on
-                your recent game performance,
-                mistakes, and performance trend.
+                {text.recommendationExplanation}
               </p>
 
             </div>

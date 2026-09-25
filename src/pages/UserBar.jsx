@@ -1,7 +1,11 @@
 import { logout } from '../utils/auth'
 import './UserBar.css'
 
-function UserBar({ user, onLogout }) {
+function UserBar({
+  user,
+  onLogout,
+  text,
+}) {
   const handleLogout = () => {
     logout()
     onLogout()
@@ -9,8 +13,8 @@ function UserBar({ user, onLogout }) {
 
   const roleLabel =
     user?.role === 'caregiver'
-      ? 'Caregiver'
-      : 'Elderly User'
+      ? text.caregiver
+      : text.elderlyUser
 
   return (
     <div className="user-bar">
@@ -24,9 +28,13 @@ function UserBar({ user, onLogout }) {
         </div>
 
         <div>
-          <strong>{user?.full_name}</strong>
+          <strong>
+            {user?.full_name}
+          </strong>
 
-          <span>{roleLabel}</span>
+          <span>
+            {roleLabel}
+          </span>
         </div>
       </div>
 
@@ -35,7 +43,7 @@ function UserBar({ user, onLogout }) {
         className="user-bar-logout"
         onClick={handleLogout}
       >
-        Logout
+        {text.logout}
       </button>
     </div>
   )

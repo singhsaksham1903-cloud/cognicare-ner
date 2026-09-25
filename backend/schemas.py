@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -224,4 +224,49 @@ class UserResponse(BaseModel):
     email: EmailStr
     role: str
     is_active: bool
+    created_at: datetime
+
+
+# ============================================================
+# Caregiver Link Create Schema
+# Used by a caregiver to request a connection
+# with an elderly user's account
+# ============================================================
+
+class CaregiverLinkCreate(BaseModel):
+    elderly_email: EmailStr
+
+
+# ============================================================
+# Caregiver Link Decision Schema
+# Used by an elderly user to approve or reject
+# a caregiver's request
+# ============================================================
+
+class CaregiverLinkDecision(BaseModel):
+    status: Literal["approved", "rejected"]
+
+
+# ============================================================
+# Caregiver Link Response Schema
+# Includes readable user information for the UI
+# ============================================================
+
+class CaregiverLinkResponse(BaseModel):
+    id: int
+
+    caregiver_id: int
+    caregiver_name: str
+    caregiver_email: EmailStr
+
+    elderly_id: int
+    elderly_name: str
+    elderly_email: EmailStr
+
+    status: Literal[
+        "pending",
+        "approved",
+        "rejected",
+    ]
+
     created_at: datetime

@@ -2,17 +2,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import test_database_connection
+
 from routes.game_sessions import router as game_sessions_router
 from routes.recommendation import router as recommendation_router
 from routes.memories import router as memories_router
 from routes.reminders import router as reminders_router
 from routes.auth import router as auth_router
+from routes.caregiver_links import router as caregiver_links_router
+
 
 app = FastAPI(
     title="Cognicare NER API",
-    description="Backend API for Cognicare NER cognitive gaming platform",
     version="1.0.0",
 )
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -24,11 +28,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.include_router(game_sessions_router)
 app.include_router(recommendation_router)
 app.include_router(memories_router)
 app.include_router(reminders_router)
 app.include_router(auth_router)
+app.include_router(caregiver_links_router)
 
 
 @app.get("/")
@@ -44,6 +50,7 @@ def health_check():
     return {
         "status": "healthy",
     }
+
 
 @app.get("/db-health")
 def database_health():
