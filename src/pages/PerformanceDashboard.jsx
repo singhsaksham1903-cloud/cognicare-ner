@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
 import './PerformanceDashboard.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import { apiGet } from '../utils/api'
 
 
 function PerformanceDashboard({
-  onBack,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
+  onBack,
 }) {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
@@ -32,7 +36,7 @@ function PerformanceDashboard({
 
         setError(
           err.message ||
-            'Could not load performance data from the backend.',
+          'Could not load performance data from the backend.',
         )
       } finally {
         setLoading(false)
@@ -47,26 +51,252 @@ function PerformanceDashboard({
     sessions.length === 0
       ? 0
       : Math.round(
-          sessions.reduce(
+        sessions.reduce(
+          (total, session) =>
+            total +
+            Number(session.accuracy || 0),
+          0,
+        ) / sessions.length,
+      )
+  const recentAccuracyTrend =
+    sessions.length < 2
+      ? '—'
+      : (() => {
+        const recentSessions = sessions.slice(0, 3)
+
+        const recentAverage =
+          recentSessions.reduce(
             (total, session) =>
-              total +
-              Number(session.accuracy || 0),
+              total + Number(session.accuracy || 0),
             0,
-          ) / sessions.length,
+          ) / recentSessions.length
+
+        const olderSessions = sessions.slice(3, 6)
+
+        if (olderSessions.length === 0) {
+          return '—'
+        }
+
+        const olderAverage =
+          olderSessions.reduce(
+            (total, session) =>
+              total + Number(session.accuracy || 0),
+            0,
+          ) / olderSessions.length
+
+        if (recentAverage > olderAverage) {
+          return 'Improving'
+        }
+
+        if (recentAverage < olderAverage) {
+          return 'Needs Practice'
+        }
+
+        return 'Stable'
+      })()
+  const gameWiseAnalytics =
+    Object.values(
+      sessions.reduce(
+        (groups, session) => {
+          const gameName =
+            session.game || 'Unknown'
+
+          if (!groups[gameName]) {
+            groups[gameName] = {
+              game: gameName,
+              sessions: 0,
+              totalAccuracy: 0,
+              totalMistakes: 0,
+            }
+          }
+
+          groups[gameName].sessions += 1
+
+          groups[gameName].totalAccuracy +=
+            Number(session.accuracy || 0)
+
+          groups[gameName].totalMistakes +=
+            Number(session.mistakes || 0)
+
+          return groups
+        },
+        {},
+      ),
+    ).map((game) => ({
+      game: game.game,
+      sessions: game.sessions,
+      averageAccuracy: Math.round(
+        game.totalAccuracy / game.sessions,
+      ),
+      averageMistakes: (
+        game.totalMistakes / game.sessions
+      ).toFixed(1),
+    }))
+
+  const accuracyDistribution = {
+    excellent: sessions.filter(
+      (session) =>
+        Number(session.accuracy || 0) >= 90,
+    ).length,
+
+    good: sessions.filter(
+      (session) => {
+        const accuracy =
+          Number(session.accuracy || 0)
+
+        return (
+          accuracy >= 70 &&
+          accuracy < 90
         )
+      },
+    ).length,
+
+    average: sessions.filter(
+      (session) => {
+        const accuracy =
+          Number(session.accuracy || 0)
+
+        return (
+          accuracy >= 50 &&
+          accuracy < 70
+        )
+      },
+    ).length,
+
+    needsPractice: sessions.filter(
+      (session) =>
+        Number(session.accuracy || 0) < 50,
+    ).length,
+  }
+  const difficultyWiseAnalytics =
+    Object.values(
+      sessions.reduce(
+        (groups, session) => {
+          const difficulty =
+            session.difficulty || 'Unknown'
+
+          if (!groups[difficulty]) {
+            groups[difficulty] = {
+              difficulty,
+              sessions: 0,
+              totalAccuracy: 0,
+            }
+          }
+
+          groups[difficulty].sessions += 1
+
+          groups[difficulty].totalAccuracy +=
+            Number(session.accuracy || 0)
+
+          return groups
+        },
+        {},
+      ),
+    ).map((difficulty) => ({
+      difficulty:
+        difficulty.difficulty,
+
+      sessions:
+        difficulty.sessions,
+
+      averageAccuracy:
+        Math.round(
+          difficulty.totalAccuracy /
+          difficulty.sessions,
+        ),
+    }))
+  const timeWiseAnalytics =
+    Object.values(
+      sessions.reduce(
+        (groups, session) => {
+          const gameName =
+            session.game || 'Unknown'
+
+          if (!groups[gameName]) {
+            groups[gameName] = {
+              game: gameName,
+              sessions: 0,
+              totalTime: 0,
+            }
+          }
+
+          groups[gameName].sessions += 1
+
+          groups[gameName].totalTime +=
+            Number(session.time || 0)
+
+          return groups
+        },
+        {},
+      ),
+    ).map((game) => ({
+      game: game.game,
+      sessions: game.sessions,
+      averageTime: Math.round(
+        game.totalTime / game.sessions,
+      ),
+    }))
+
+
+
+
+  const averageMistakes =
+    sessions.length === 0
+      ? '—'
+      : (
+        sessions.reduce(
+          (total, session) =>
+            total +
+            Number(session.mistakes || 0),
+          0,
+        ) / sessions.length
+      ).toFixed(1)
+
+  const gameCounts = sessions.reduce(
+    (counts, session) => {
+      const gameName =
+        session.game || 'Unknown'
+
+      counts[gameName] =
+        (counts[gameName] || 0) + 1
+
+      return counts
+    },
+    {},
+  )
+
+  const mostPlayedGame =
+    sessions.length === 0
+      ? '—'
+      : Object.entries(gameCounts).sort(
+        (a, b) => b[1] - a[1],
+      )[0][0]
+
+  const analyticsSummary =
+    sessions.length === 0
+      ? {
+        sessions: 0,
+        message:
+          'No performance data is available yet.',
+      }
+      : {
+        sessions: sessions.length,
+        message:
+          `You have completed ${sessions.length} sessions with an average accuracy of ${averageAccuracy}%. Your recent performance trend is ${recentAccuracyTrend}. Your most played game is ${mostPlayedGame}.`,
+      }
 
 
   const averageTime =
     sessions.length === 0
       ? 0
       : Math.round(
-          sessions.reduce(
-            (total, session) =>
-              total +
-              Number(session.time || 0),
-            0,
-          ) / sessions.length,
-        )
+        sessions.reduce(
+          (total, session) =>
+            total +
+            Number(session.time || 0),
+          0,
+        ) / sessions.length,
+      )
 
 
   const gameTypes = new Set(
@@ -129,6 +359,13 @@ function PerformanceDashboard({
           📊 {text.performanceDashboard}
         </h1>
 
+        <VoiceReadAloud
+          text={`${text.performanceDashboard}. ${text.performancePageDescription}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
+
 
         <p>
           {text.performancePageDescription}
@@ -189,6 +426,35 @@ function PerformanceDashboard({
               </span>
             </div>
 
+            <div className="performance-stat">
+              <strong>
+                {averageMistakes}
+              </strong>
+
+              <span>
+                {text.averageMistakes}
+              </span>
+            </div>
+
+            <div className="performance-stat">
+              <strong>
+                {mostPlayedGame}
+              </strong>
+
+              <span>
+                {text.mostPlayedGame}
+              </span>
+            </div>
+
+            <div className="performance-stat">
+              <strong>
+                {recentAccuracyTrend}
+              </strong>
+
+              <span>
+                Performance Trend
+              </span>
+            </div>
 
             <div className="performance-stat">
               <strong>
@@ -203,7 +469,129 @@ function PerformanceDashboard({
             </div>
 
           </section>
+          <section className="performance-game-summary">
+            {gameWiseAnalytics.length === 0 && (
+              <p className="performance-empty-message">
+                No game performance data available yet.
+              </p>
+            )}
+            <h2>Game-wise Performance</h2>
 
+            <div className="performance-game-grid">
+              {gameWiseAnalytics.map((game) => (
+                <article
+                  className="performance-game-card"
+                  key={game.game}
+                >
+                  <h3>{game.game}</h3>
+
+                  <p>
+                    <strong>{game.sessions}</strong>{' '}
+                    {game.sessions === 1
+                      ? 'session'
+                      : 'sessions'}
+                  </p>
+
+                  <p>
+                    Average Accuracy:{' '}
+                    <strong>{game.averageAccuracy}%</strong>
+                  </p>
+
+                  <p>
+                    Average Mistakes:{' '}
+                    <strong>{game.averageMistakes}</strong>
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+          <section className="performance-distribution">
+            <h2>Accuracy Distribution</h2>
+
+            <div className="performance-distribution-grid">
+              <div className="performance-stat">
+                <strong>{accuracyDistribution.excellent}</strong>
+                <span>90–100% Accuracy</span>
+              </div>
+
+              <div className="performance-stat">
+                <strong>{accuracyDistribution.good}</strong>
+                <span>70–89% Accuracy</span>
+              </div>
+
+              <div className="performance-stat">
+                <strong>{accuracyDistribution.average}</strong>
+                <span>50–69% Accuracy</span>
+              </div>
+
+              <div className="performance-stat">
+                <strong>{accuracyDistribution.needsPractice}</strong>
+                <span>Below 50% Accuracy</span>
+              </div>
+            </div>
+          </section>
+          <section className="performance-difficulty-summary">
+            <h2>Difficulty-wise Performance</h2>
+
+            <div className="performance-difficulty-grid">
+              {difficultyWiseAnalytics.map((item) => (
+                <article
+                  className="performance-difficulty-card"
+                  key={item.difficulty}
+                >
+                  <h3>{item.difficulty}</h3>
+
+                  <p>
+                    Sessions:{' '}
+                    <strong>{item.sessions}</strong>
+                  </p>
+
+                  <p>
+                    Average Accuracy:{' '}
+                    <strong>{item.averageAccuracy}%</strong>
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+          <section className="performance-time-summary">
+            <h2>Time-wise Performance</h2>
+
+            <div className="performance-time-grid">
+              {timeWiseAnalytics.map((item) => (
+                <article
+                  className="performance-time-card"
+                  key={item.game}
+                >
+                  <h3>{item.game}</h3>
+
+                  <p>
+                    Sessions:{' '}
+                    <strong>{item.sessions}</strong>
+                  </p>
+
+                  <p>
+                    Average Time:{' '}
+                    <strong>{item.averageTime}s</strong>
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="performance-summary">
+            <h2>Analytics Summary</h2>
+
+            <div className="performance-summary-card">
+              <strong>
+                {analyticsSummary.sessions}
+              </strong>
+
+              <p>
+                {analyticsSummary.message}
+              </p>
+            </div>
+          </section>
 
           {/* Recent Sessions */}
           <section className="performance-history">

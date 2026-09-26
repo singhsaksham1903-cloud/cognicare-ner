@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './CaregiverDashboard.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import { apiGet } from '../utils/api'
 
@@ -9,6 +10,9 @@ function CaregiverDashboard({
   onBack,
   user,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
 }) {
   const [sessions, setSessions] = useState([])
   const [memories, setMemories] = useState([])
@@ -117,7 +121,7 @@ function CaregiverDashboard({
 
       setError(
         err.message ||
-          text.loadError,
+        text.loadError,
       )
     } finally {
       setLoading(false)
@@ -209,15 +213,15 @@ function CaregiverDashboard({
     sessions.length === 0
       ? 0
       : Math.round(
-          sessions.reduce(
-            (total, session) =>
-              total +
-              Number(
-                session.accuracy || 0,
-              ),
-            0,
-          ) / sessions.length,
-        )
+        sessions.reduce(
+          (total, session) =>
+            total +
+            Number(
+              session.accuracy || 0,
+            ),
+          0,
+        ) / sessions.length,
+      )
 
 
   const gameTypes = new Set(
@@ -421,6 +425,12 @@ function CaregiverDashboard({
         <p>
           {text.caregiverDashboardDescription}
         </p>
+        <VoiceReadAloud
+          text={`${text.caregiverDashboardTitle}. ${text.caregiverDashboardDescription}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
 
 
         {linkedElderly && (
@@ -652,11 +662,11 @@ function CaregiverDashboard({
                           <span>
                             {text.recent}:{' '}
                             {recentAccuracy ===
-                            null
+                              null
                               ? '—'
                               : `${Math.round(
-                                  recentAccuracy,
-                                )}%`}
+                                recentAccuracy,
+                              )}%`}
                           </span>
 
                         </div>
@@ -701,7 +711,7 @@ function CaregiverDashboard({
 
 
               {upcomingReminders.length ===
-              0 ? (
+                0 ? (
 
                 <div className="caregiver-empty">
                   {text.noUpcomingReminders}
@@ -774,7 +784,7 @@ function CaregiverDashboard({
 
 
               {recentSessions.length ===
-              0 ? (
+                0 ? (
 
                 <div className="caregiver-empty">
                   {text.noSessionsRecorded}

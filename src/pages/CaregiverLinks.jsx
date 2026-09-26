@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './CaregiverLinks.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import {
   apiDelete,
@@ -9,11 +10,13 @@ import {
   apiPut,
 } from '../utils/api'
 
-
 function CaregiverLinks({
   user,
   onBack,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
 }) {
   const [links, setLinks] = useState([])
 
@@ -62,7 +65,7 @@ function CaregiverLinks({
 
       setError(
         err.message ||
-          text.loadError,
+        text.loadError,
       )
     } finally {
       setLoading(false)
@@ -119,7 +122,7 @@ function CaregiverLinks({
 
       setError(
         err.message ||
-          text.sendError,
+        text.sendError,
       )
     } finally {
       setSubmitting(false)
@@ -158,7 +161,7 @@ function CaregiverLinks({
 
       setError(
         err.message ||
-          text.updateError,
+        text.updateError,
       )
     } finally {
       setSubmitting(false)
@@ -191,7 +194,7 @@ function CaregiverLinks({
 
       setError(
         err.message ||
-          text.removeError,
+        text.removeError,
       )
     } finally {
       setSubmitting(false)
@@ -273,6 +276,16 @@ function CaregiverLinks({
                 ? text.caregiverConnectionsDescription
                 : text.caregiverRequestsDescription}
             </p>
+            <VoiceReadAloud
+              text={
+                isCaregiver
+                  ? `${text.caregiverConnections}. ${text.caregiverConnectionsDescription}`
+                  : `${text.caregiverRequests}. ${text.caregiverRequestsDescription}`
+              }
+              language={language}
+              label={readAloudLabel}
+              stopLabel={stopReadingLabel}
+            />
           </div>
 
         </div>
@@ -517,7 +530,7 @@ function CaregiverLinks({
 
                     {isElderly &&
                       link.status ===
-                        'pending' && (
+                      'pending' && (
                         <>
                           <button
                             type="button"
@@ -553,20 +566,20 @@ function CaregiverLinks({
                     {(link.status ===
                       'approved' ||
                       link.status ===
-                        'rejected') && (
-                      <button
-                        type="button"
-                        className="caregiver-links-remove-button"
-                        onClick={() =>
-                          handleDelete(
-                            link.id,
-                          )
-                        }
-                        disabled={submitting}
-                      >
-                        {text.remove}
-                      </button>
-                    )}
+                      'rejected') && (
+                        <button
+                          type="button"
+                          className="caregiver-links-remove-button"
+                          onClick={() =>
+                            handleDelete(
+                              link.id,
+                            )
+                          }
+                          disabled={submitting}
+                        >
+                          {text.remove}
+                        </button>
+                      )}
 
                   </div>
 

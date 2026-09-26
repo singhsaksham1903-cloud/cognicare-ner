@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './Memories.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import {
   apiDelete,
@@ -19,8 +20,11 @@ const EMPTY_FORM = {
 
 
 function Memories({
-  onBack,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
+  onBack,
 }) {
   const [memories, setMemories] = useState([])
 
@@ -62,7 +66,7 @@ function Memories({
 
       setError(
         err.message ||
-          text.loadError,
+        text.loadError,
       )
     } finally {
       setLoading(false)
@@ -157,7 +161,7 @@ function Memories({
 
       setError(
         err.message ||
-          text.saveError,
+        text.saveError,
       )
     } finally {
       setSaving(false)
@@ -234,7 +238,7 @@ function Memories({
 
       setError(
         err.message ||
-          text.deleteError,
+        text.deleteError,
       )
     }
   }
@@ -286,6 +290,12 @@ function Memories({
         </p>
 
       </header>
+      <VoiceReadAloud
+        text={`${text.memoriesTitle}. ${text.memoriesDescription}`}
+        language={language}
+        label={readAloudLabel}
+        stopLabel={stopReadingLabel}
+      />
 
 
       {error && (
@@ -502,9 +512,9 @@ function Memories({
                         <span className="memory-category">
                           {
                             text.categories[
-                              memory.category
+                            memory.category
                             ] ||
-                              memory.category
+                            memory.category
                           }
                         </span>
 

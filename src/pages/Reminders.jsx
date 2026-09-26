@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './Reminders.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import {
   apiDelete,
@@ -20,8 +21,11 @@ const EMPTY_FORM = {
 
 
 function Reminders({
-  onBack,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
+  onBack,
 }) {
   const [reminders, setReminders] = useState([])
   const [form, setForm] = useState(EMPTY_FORM)
@@ -51,7 +55,7 @@ function Reminders({
 
       setError(
         err.message ||
-          text.loadError,
+        text.loadError,
       )
     } finally {
       setLoading(false)
@@ -115,8 +119,8 @@ function Reminders({
         category: form.category,
         dueDatetime: form.dueDatetime
           ? new Date(
-              form.dueDatetime,
-            ).toISOString()
+            form.dueDatetime,
+          ).toISOString()
           : null,
         completed: form.completed,
       }
@@ -152,7 +156,7 @@ function Reminders({
 
       setError(
         err.message ||
-          text.saveError,
+        text.saveError,
       )
     } finally {
       setSaving(false)
@@ -245,7 +249,7 @@ function Reminders({
 
       setError(
         err.message ||
-          text.updateError,
+        text.updateError,
       )
     }
   }
@@ -288,7 +292,7 @@ function Reminders({
 
       setError(
         err.message ||
-          text.deleteError,
+        text.deleteError,
       )
     }
   }
@@ -347,11 +351,20 @@ function Reminders({
         </h1>
 
 
+
+
         <p>
           {text.remindersDescription}
         </p>
 
       </header>
+      <VoiceReadAloud
+        text={`${text.remindersTitle}. ${text.remindersDescription}`}
+        language={language}
+        label={readAloudLabel}
+        stopLabel={stopReadingLabel}
+      />
+
 
 
       {error && (
@@ -577,15 +590,13 @@ function Reminders({
 
                   return (
                     <article
-                      className={`reminder-card ${
-                        reminder.completed
-                          ? 'reminder-card--completed'
-                          : ''
-                      } ${
-                        overdue
+                      className={`reminder-card ${reminder.completed
+                        ? 'reminder-card--completed'
+                        : ''
+                        } ${overdue
                           ? 'reminder-card--overdue'
                           : ''
-                      }`}
+                        }`}
                       key={reminder.id}
                     >
 
@@ -601,7 +612,7 @@ function Reminders({
                           <span className="reminder-category">
                             {
                               text.categories[
-                                reminder.category
+                              reminder.category
                               ] ||
                               reminder.category
                             }

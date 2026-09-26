@@ -88,7 +88,9 @@ body {
   padding: 0 24px;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-sans);
   font-weight: 600;
   color: var(--text-heading);
@@ -125,4 +127,156 @@ p {
   #root {
     padding: 0 16px;
   }
+}
+
+/* ============================================
+   Accessibility — Keyboard Focus
+   ============================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #4f7d5a;
+  outline-offset: 3px;
+}
+
+/* ============================================
+   Accessibility — Larger Touch Targets
+   ============================================ */
+
+button,
+a,
+select,
+input,
+textarea {
+  min-height: 48px;
+}
+
+button,
+select,
+input,
+textarea {
+  font-size: 16px;
+}
+
+/* ============================================
+   Accessibility — Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Accessibility — Skip to Main Content
+   ============================================ */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2f4f3a;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Accessibility — High Contrast
+   ============================================ */
+
+@media (prefers-contrast: more) {
+
+  button,
+  select,
+  input,
+  textarea {
+    border: 2px solid currentColor;
+  }
+
+  .card,
+  .offline-status,
+  .user-bar,
+  section {
+    border: 2px solid currentColor;
+  }
+
+  :focus-visible {
+    outline-width: 4px;
+  }
+}
+
+/* ============================================
+   Accessibility — Text Readability
+   ============================================ */
+
+body {
+  line-height: 1.6;
+}
+
+p,
+li,
+label,
+button,
+input,
+select,
+textarea {
+  line-height: 1.5;
+}
+
+/* ============================================
+   Accessibility — Disabled Controls
+   ============================================ */
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   Voice — Elder-Friendly Control
+   ============================================ */
+
+.voice-read-aloud {
+  min-width: 180px;
+  padding: 12px 18px;
+  margin: 12px 0;
+  border: 2px solid #4f7d5a;
+  border-radius: 12px;
+  background: #f2f8f3;
+  color: #2f4f3a;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.voice-read-aloud:hover {
+  background: #e7f1e9;
+}
+
+.voice-read-aloud:focus-visible {
+  outline: 4px solid #4f7d5a;
+  outline-offset: 3px;
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './CognitiveGames.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import MemoryMatch from './MemoryMatch'
 import SequenceMemory from './SequenceMemory'
@@ -41,8 +42,8 @@ function GameCard({
       <button
         type="button"
         className={`game-card-button${isAvailable
-            ? ''
-            : ' game-card-button--disabled'
+          ? ''
+          : ' game-card-button--disabled'
           }`}
         disabled={!isAvailable}
         onClick={onClick}
@@ -64,6 +65,9 @@ function CognitiveGames({
   memoryMatchText,
   sequenceMemoryText,
   objectRecallText,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
   onNavigate,
   initialGame = null,
   initialDifficulty = null,
@@ -88,9 +92,10 @@ function CognitiveGames({
     return (
       <MemoryMatch
         text={memoryMatchText}
-        onBack={() =>
-          setSelectedGame(null)
-        }
+        language={language}
+        readAloudLabel={readAloudLabel}
+        stopReadingLabel={stopReadingLabel}
+        onBack={() => setSelectedGame(null)}
       />
     )
   }
@@ -106,6 +111,9 @@ function CognitiveGames({
     return (
       <SequenceMemory
         text={sequenceMemoryText}
+        language={language}
+        readAloudLabel={readAloudLabel}
+        stopReadingLabel={stopReadingLabel}
         initialDifficulty={
           initialDifficulty || 'Easy'
         }
@@ -125,6 +133,9 @@ function CognitiveGames({
     return (
       <ObjectRecall
         text={objectRecallText}
+        language={language}
+        readAloudLabel={readAloudLabel}
+        stopReadingLabel={stopReadingLabel}
         initialDifficulty={initialDifficulty || 'Easy'}
         onBack={() => setSelectedGame(null)}
       />
@@ -183,6 +194,12 @@ function CognitiveGames({
         <p className="games-subtitle">
           {text.subtitle}
         </p>
+        <VoiceReadAloud
+          text={`${text.title}. ${text.subtitle}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
 
       </header>
 

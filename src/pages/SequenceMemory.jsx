@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import './SequenceMemory.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import { savePerformanceResult } from '../utils/performanceStorage'
 
@@ -40,9 +41,12 @@ function getValidDifficulty(value) {
 
 
 function SequenceMemory({
+  text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
   onBack,
   initialDifficulty = 'Easy',
-  text,
 }) {
   const [difficulty, setDifficulty] =
     useState(
@@ -324,12 +328,12 @@ function SequenceMemory({
     Number.isFinite(
       totalAttempts,
     ) &&
-    totalAttempts > 0
+      totalAttempts > 0
       ? Math.round(
-          (sequenceLength /
-            totalAttempts) *
-            100,
-        )
+        (sequenceLength /
+          totalAttempts) *
+        100,
+      )
       : 0
 
 
@@ -450,6 +454,12 @@ function SequenceMemory({
         <p>
           {text.description}
         </p>
+        <VoiceReadAloud
+          text={`${text.title}. ${text.description}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
 
       </header>
 
@@ -472,11 +482,10 @@ function SequenceMemory({
               <button
                 key={level}
                 type="button"
-                className={`difficulty-button ${
-                  difficulty === level
-                    ? 'difficulty-button--active'
-                    : ''
-                }`}
+                className={`difficulty-button ${difficulty === level
+                  ? 'difficulty-button--active'
+                  : ''
+                  }`}
                 onClick={() =>
                   setDifficulty(
                     level,
@@ -484,14 +493,14 @@ function SequenceMemory({
                 }
                 disabled={
                   phase ===
-                    'showing' ||
+                  'showing' ||
                   phase ===
-                    'answering'
+                  'answering'
                 }
               >
                 {
                   text.difficulties[
-                    level
+                  level
                   ]
                 }
               </button>
@@ -640,11 +649,10 @@ function SequenceMemory({
                 <button
                   key={symbol}
                   type="button"
-                  className={`sequence-symbol ${
-                    alreadySelected
-                      ? 'sequence-symbol--selected'
-                      : ''
-                  }`}
+                  className={`sequence-symbol ${alreadySelected
+                    ? 'sequence-symbol--selected'
+                    : ''
+                    }`}
                   onClick={() =>
                     handleOptionClick(
                       symbol,
@@ -687,7 +695,7 @@ function SequenceMemory({
             </strong>{' '}
             {
               text.difficulties[
-                difficulty
+              difficulty
               ]
             }
           </p>
@@ -778,7 +786,7 @@ function SequenceMemory({
                       {text.difficulty}:{' '}
                       {
                         text.difficulties[
-                          result.difficulty
+                        result.difficulty
                         ] ||
                         result.difficulty
                       }

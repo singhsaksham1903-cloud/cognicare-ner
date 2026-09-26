@@ -10,6 +10,7 @@ import Memories from './pages/Memories'
 import Reminders from './pages/Reminders'
 import UserBar from './pages/UserBar'
 import OfflineStatus from './Components/OfflineStatus'
+import VoiceReadAloud from './Components/VoiceReadAloud'
 import LanguageSelector from './Components/LanguageSelector'
 
 import {
@@ -273,6 +274,17 @@ function App() {
     )
   }, [language])
 
+  useEffect(() => {
+    const languageMap = {
+      en: 'en-IN',
+      hi: 'hi-IN',
+      as: 'as-IN',
+    }
+
+    document.documentElement.lang =
+      languageMap[language] || 'en-IN'
+  }, [language])
+
 
   // ==========================================
   // Restore logged-in session
@@ -371,6 +383,15 @@ function App() {
         }
 
         objectRecallText={currentText.objectRecallPage}
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
+        }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
         initialGame={recommendedGame}
         initialDifficulty={
           recommendedDifficulty
@@ -395,9 +416,16 @@ function App() {
     return (
       <PerformanceDashboard
         text={currentText.performancePage}
-        onBack={() =>
-          setPage('dashboard')
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
         }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
+        onBack={() => setPage('dashboard')}
       />
     )
   }
@@ -412,26 +440,38 @@ function App() {
       <CaregiverDashboard
         user={currentUser}
         text={currentText.caregiverPage}
-        onBack={() =>
-          setPage('dashboard')
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
         }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
+        onBack={() => setPage('dashboard')}
       />
     )
   }
 
-
   // ==========================================
   // Caregiver Connections
   // ==========================================
-
   if (page === 'caregiver-links') {
     return (
       <CaregiverLinks
         user={currentUser}
         text={currentText.caregiverLinksPage}
-        onBack={() =>
-          setPage('dashboard')
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
         }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
+        onBack={() => setPage('dashboard')}
       />
     )
   }
@@ -445,6 +485,15 @@ function App() {
     return (
       <Memories
         text={currentText.memoriesPage}
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
+        }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
         onBack={() =>
           setPage('dashboard')
         }
@@ -460,6 +509,15 @@ function App() {
     return (
       <Reminders
         text={currentText.remindersPage}
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
+        }
+        readAloudLabel={currentText.readAloud}
+        stopReadingLabel={currentText.stopReading}
         onBack={() =>
           setPage('dashboard')
         }
@@ -477,6 +535,9 @@ function App() {
       {/* ======================================
           Header
           ====================================== */}
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
 
       <header className="app-header">
 
@@ -529,13 +590,30 @@ function App() {
           offline: currentText.offline,
         }}
       />
+      <VoiceReadAloud
+        text={`${greeting}, ${currentUser?.name || currentText.elderlyUser
+          }. ${currentText.cognitiveGames}. ${currentText.cognitiveGamesDescription
+          }`}
+        language={
+          language === 'hi'
+            ? 'hi-IN'
+            : language === 'as'
+              ? 'as-IN'
+              : 'en-IN'
+        }
+        label={currentText.readAloud}
+        stopLabel={currentText.stopReading}
+      />
 
 
       {/* ======================================
           Dashboard
           ====================================== */}
 
-      <main className="dashboard">
+      <main
+        id="main-content"
+        className="dashboard"
+      >
 
         {/* Recommendation */}
 

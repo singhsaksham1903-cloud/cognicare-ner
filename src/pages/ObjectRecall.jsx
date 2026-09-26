@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import './ObjectRecall.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import { savePerformanceResult } from '../utils/performanceStorage'
 
@@ -40,9 +41,12 @@ function shuffleItems(items) {
 
 
 function ObjectRecall({
+  text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
   onBack,
   initialDifficulty = 'Easy',
-  text,
 }) {
   const [difficulty, setDifficulty] =
     useState(initialDifficulty)
@@ -328,10 +332,10 @@ function ObjectRecall({
     totalSelections === 0
       ? 0
       : Math.round(
-          (correctSelections /
-            totalSelections) *
-            100,
-        )
+        (correctSelections /
+          totalSelections) *
+        100,
+      )
 
 
   const gameCompleted =
@@ -484,6 +488,12 @@ function ObjectRecall({
         <p>
           {text.description}
         </p>
+        <VoiceReadAloud
+          text={`${text.title}. ${text.description}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
 
       </header>
 
@@ -506,11 +516,10 @@ function ObjectRecall({
               <button
                 key={level}
                 type="button"
-                className={`object-difficulty-button ${
-                  difficulty === level
-                    ? 'object-difficulty-button--active'
-                    : ''
-                }`}
+                className={`object-difficulty-button ${difficulty === level
+                  ? 'object-difficulty-button--active'
+                  : ''
+                  }`}
                 onClick={() =>
                   setDifficulty(level)
                 }
@@ -521,7 +530,7 @@ function ObjectRecall({
               >
                 {
                   text.difficulties[
-                    level
+                  level
                   ]
                 }
               </button>
@@ -683,13 +692,12 @@ function ObjectRecall({
                 <button
                   key={object}
                   type="button"
-                  className={`object-option ${
-                    selected
-                      ? correct
-                        ? 'object-option--correct'
-                        : 'object-option--wrong'
-                      : ''
-                  }`}
+                  className={`object-option ${selected
+                    ? correct
+                      ? 'object-option--correct'
+                      : 'object-option--wrong'
+                    : ''
+                    }`}
                   onClick={() =>
                     handleObjectClick(
                       object,
@@ -735,7 +743,7 @@ function ObjectRecall({
             </strong>{' '}
             {
               text.difficulties[
-                difficulty
+              difficulty
               ]
             }
           </p>
@@ -843,7 +851,7 @@ function ObjectRecall({
                       {text.difficulty}:{' '}
                       {
                         text.difficulties[
-                          result.difficulty
+                        result.difficulty
                         ] ||
                         result.difficulty
                       }

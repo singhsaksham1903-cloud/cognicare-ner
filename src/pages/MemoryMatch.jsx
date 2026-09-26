@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import './MemoryMatch.css'
+import VoiceReadAloud from '../Components/VoiceReadAloud'
 
 import { savePerformanceResult } from '../utils/performanceStorage'
 
@@ -31,10 +32,10 @@ function shuffleCards() {
       Math.random() * (i + 1),
     )
 
-    ;[cards[i], cards[j]] = [
-      cards[j],
-      cards[i],
-    ]
+      ;[cards[i], cards[j]] = [
+        cards[j],
+        cards[i],
+      ]
   }
 
   return cards.map(
@@ -47,8 +48,11 @@ function shuffleCards() {
 
 
 function MemoryMatch({
-  onBack,
   text,
+  language = 'en-IN',
+  readAloudLabel = 'Read Aloud',
+  stopReadingLabel = 'Stop Reading',
+  onBack,
 }) {
   const [cards, setCards] =
     useState(shuffleCards)
@@ -128,7 +132,7 @@ function MemoryMatch({
     if (
       !timerStarted ||
       matched.length ===
-        cards.length
+      cards.length
     ) {
       return undefined
     }
@@ -165,9 +169,9 @@ function MemoryMatch({
     moves === 0
       ? 0
       : Math.round(
-          (matchedPairs / moves) *
-            100,
-        )
+        (matchedPairs / moves) *
+        100,
+      )
 
   const gameCompleted =
     matched.length ===
@@ -356,6 +360,12 @@ function MemoryMatch({
         <p>
           {text.description}
         </p>
+        <VoiceReadAloud
+          text={`${text.title}. ${text.description}`}
+          language={language}
+          label={readAloudLabel}
+          stopLabel={stopReadingLabel}
+        />
 
       </header>
 
@@ -464,16 +474,14 @@ function MemoryMatch({
               <button
                 key={card.id}
                 type="button"
-                className={`memory-card ${
-                  isFlipped ||
+                className={`memory-card ${isFlipped ||
                   isMatched
-                    ? 'memory-card--visible'
-                    : ''
-                } ${
-                  isMatched
+                  ? 'memory-card--visible'
+                  : ''
+                  } ${isMatched
                     ? 'memory-card--matched'
                     : ''
-                }`}
+                  }`}
                 onClick={() =>
                   handleCardClick(
                     index,
@@ -481,14 +489,14 @@ function MemoryMatch({
                 }
                 aria-label={
                   isFlipped ||
-                  isMatched
+                    isMatched
                     ? `${text.cardShowing} ${card.value}`
                     : text.hiddenCard
                 }
               >
                 <span>
                   {isFlipped ||
-                  isMatched
+                    isMatched
                     ? card.value
                     : '?'}
                 </span>

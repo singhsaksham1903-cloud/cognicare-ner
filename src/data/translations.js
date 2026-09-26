@@ -2,6 +2,8 @@ const translations = {
     en: {
         languageName: 'English',
         language: 'Language',
+        readAloud: 'Read Aloud',
+        stopReading: 'Stop Reading',
         caregiver: 'Caregiver',
         elderlyUser: 'Elderly User',
         logout: 'Logout',
@@ -119,6 +121,8 @@ const translations = {
             gamesPlayed: 'Games Played',
             averageAccuracy: 'Average Accuracy',
             averageTime: 'Average Time',
+            averageMistakes: 'Average Mistakes',
+            mostPlayedGame: 'Most Played Game',
             recentSessions: 'Recent Sessions',
             performanceDataSource:
                 'Data loaded from your account through FastAPI and PostgreSQL.',
@@ -744,6 +748,8 @@ const translations = {
     hi: {
         languageName: 'हिन्दी',
         language: 'भाषा',
+        readAloud: 'पढ़कर सुनाएँ',
+        stopReading: 'पढ़ना बंद करें',
         caregiver: 'देखभालकर्ता',
         elderlyUser: 'बुज़ुर्ग उपयोगकर्ता',
         logout: 'लॉग आउट',
@@ -861,6 +867,8 @@ const translations = {
             gamesPlayed: 'खेले गए खेल',
             averageAccuracy: 'औसत सटीकता',
             averageTime: 'औसत समय',
+            averageMistakes: 'औसत गलतियाँ',
+            mostPlayedGame: 'सबसे अधिक खेला गया गेम',
             recentSessions: 'हाल के सत्र',
             performanceDataSource:
                 'डेटा आपके खाते से FastAPI और PostgreSQL के माध्यम से लोड किया गया है।',
@@ -1503,6 +1511,8 @@ const translations = {
     as: {
         languageName: 'অসমীয়া',
         language: 'ভাষা',
+        readAloud: 'পঢ়ি শুনাওক',
+        stopReading: 'পঢ়া বন্ধ কৰক',
         caregiver: 'যত্ন লওঁতা',
         elderlyUser: 'বৃদ্ধ ব্যৱহাৰকাৰী',
         logout: 'লগ আউট',
@@ -1620,6 +1630,8 @@ const translations = {
             gamesPlayed: 'খেলা খেল',
             averageAccuracy: 'গড় সঠিকতা',
             averageTime: 'গড় সময়',
+            averageMistakes: 'গড় ভুল',
+            mostPlayedGame: 'সৰ্বাধিক খেলা খেল',
             recentSessions: 'শেহতীয়া সেশ্যন',
             performanceDataSource:
                 'আপোনাৰ একাউণ্টৰ পৰা FastAPI আৰু PostgreSQLৰ জৰিয়তে ডাটা লোড কৰা হৈছে।',

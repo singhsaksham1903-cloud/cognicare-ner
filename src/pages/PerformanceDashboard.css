@@ -155,3 +155,191 @@
     gap: 6px;
   }
 }
+
+.performance-distribution {
+  margin-top: 28px;
+}
+
+.performance-distribution h2 {
+  margin-bottom: 16px;
+}
+
+.performance-distribution-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,
+      minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.performance-distribution-grid .performance-stat {
+  background: #f2f8f3;
+  border: 2px solid #d8e6da;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.performance-distribution-grid .performance-stat strong {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.performance-distribution-grid .performance-stat span {
+  font-size: 1rem;
+}
+
+.performance-difficulty-summary {
+  margin-top: 28px;
+}
+
+.performance-difficulty-summary h2 {
+  margin-bottom: 16px;
+}
+
+.performance-difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,
+      minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.performance-difficulty-card {
+  background: #f2f8f3;
+  border: 2px solid #d8e6da;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.performance-difficulty-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.performance-difficulty-card p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.performance-difficulty-card strong {
+  font-size: 1.1rem;
+}
+
+.performance-time-summary {
+  margin-top: 28px;
+}
+
+.performance-time-summary h2 {
+  margin-bottom: 16px;
+}
+
+.performance-time-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,
+      minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.performance-time-card {
+  background: #f2f8f3;
+  border: 2px solid #d8e6da;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.performance-time-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.performance-time-card p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.performance-time-card strong {
+  font-size: 1.1rem;
+}
+
+.performance-summary {
+  margin-top: 28px;
+}
+
+.performance-summary h2 {
+  margin-bottom: 16px;
+}
+
+.performance-summary-card {
+  background: #f2f8f3;
+  border: 2px solid #d8e6da;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.performance-summary-card strong {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.performance-summary-card p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+
+  .performance-game-grid,
+  .performance-distribution-grid,
+  .performance-difficulty-grid,
+  .performance-time-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .performance-stat,
+  .performance-game-card,
+  .performance-difficulty-card,
+  .performance-time-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .performance-summary-card {
+    padding: 18px;
+  }
+
+  .performance-summary-card p {
+    overflow-wrap: anywhere;
+  }
+}
+
+.performance-empty-message {
+  margin: 0 0 16px;
+  padding: 16px;
+  background: #f7faf8;
+  border: 2px solid #d8e6da;
+  border-radius: 12px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.performance-game-summary,
+.performance-distribution,
+.performance-difficulty-summary,
+.performance-time-summary,
+.performance-summary {
+  margin-bottom: 28px;
+}
+
+.performance-game-summary h2,
+.performance-distribution h2,
+.performance-difficulty-summary h2,
+.performance-time-summary h2,
+.performance-summary h2 {
+  margin-top: 0;
+}
