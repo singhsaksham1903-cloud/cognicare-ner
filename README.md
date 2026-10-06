@@ -18,7 +18,7 @@ If you are developing a production application, we recommend using TypeScript wi
 ## TEAM Igniters:-
 Team Leader: Gaurika, 
 Team Members: Saksham Singh,
-Team Members: Abhinav Gupta,
+Team Members: Abhinav Gupta
 Team Members: Ayush Vikram Chahuan, 
 Team Members: Arunima Roy Bhowmik, 
 Team Members: Arijit Singh
